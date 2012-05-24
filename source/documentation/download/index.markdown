@@ -6,6 +6,7 @@ comments: false
 sharing: true
 footer: false
 categories: documentation
+sidebar: false
 ---
 
 Download via the public [Maven Central repository](http://repo1.maven.org/maven2/). Just add the dependency to your pom.
