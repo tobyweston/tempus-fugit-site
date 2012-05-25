@@ -8,12 +8,8 @@ footer: false
 categories:
 ---
 
-  * [Thread Utilities](/documentation/threading)
-    * Sleeping and Interruptions
-    * Scheduled Interruption
-    * Thread Dumps
-    * Deadlock Detection
-    * Miscellaneous
+{% render_partial ./documentation/threading/index.markdown %}
+
   * [Concurrency Utilities](/documentation/concurrency)
     * Countdown Latch with Timeout
     * Execute Using Locks
@@ -28,4 +24,4 @@ categories:
     * Convert to a `Runnable` using Callable Adapter
     * Throw specific exceptions with tempus-fugit Callable
 
-[Next, Threading Utilities &raquo;](/documentation/threading/)
+[**Next** &raquo; *Threading Utilities* &raquo;](/documentation/threading/)
