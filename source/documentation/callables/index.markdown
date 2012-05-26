@@ -6,7 +6,6 @@ comments: false
 sharing: true
 footer: false
 categories: documentation
-indexer: true
 ---
 
 ## Callable Adapter

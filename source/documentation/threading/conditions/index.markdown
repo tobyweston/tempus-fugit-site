@@ -7,7 +7,6 @@ comments: false
 footer: false
 sidebar: false
 categories: [Thread Utilities]
-
 ---
 
 ## Wait for a Thread to be in a State

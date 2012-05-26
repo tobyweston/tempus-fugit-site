@@ -9,10 +9,8 @@ categories:
 
 {% render_partial ./documentation/threading/index.markdown %}
 
-  * [Concurrency Utilities](/documentation/concurrency)
-    * Countdown Latch with Timeout
-    * Execute Using Locks
-    * Timeoutable Completion Service
+{% render_partial ./documentation/concurrency/index.markdown %}
+
   * [JUnit Integration](/documentation/junit)
     * Intermittent Tests
     * Parallel Tests
@@ -23,4 +21,4 @@ categories:
     * Convert to a `Runnable` using Callable Adapter
     * Throw specific exceptions with tempus-fugit Callable
 
-[**Next** &raquo; *Threading Utilities* &raquo;](/documentation/threading/)
+[Next, Threading Utilities &raquo;](/documentation/threading/)
