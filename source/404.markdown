@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Page Not Found
+sharing: false
 ---
 
 Oops, I couldn't find the page you're looking for!
