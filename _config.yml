@@ -4,7 +4,7 @@
 
 url: http://tempusfugitlibrary.org
 title: tempus-fugit
-subtitle: Java micro-library for testing and concurrency
+subtitle: Java micro-library for writing & testing concurrent code
 author: Toby Weston
 simple_search: http://google.com/search
 description: The tempus-fugit open source java library project site

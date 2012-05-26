@@ -6,6 +6,8 @@ sharing: false
 footer: false
 ---
 
-* Write cleaner concurrent code
-* Less boiler plate code
-* Introduce determinism back into your tests
+The tempus-fugit library helps you write and test concurrent code. It helps you to
+
+* Write cleaner concurrent code with less boiler plate code
+* Introduce determinism back into your concurrent tests
+* Leverage your synergies and be awesome
