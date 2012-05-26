@@ -11,12 +11,8 @@ categories:
 
 {% render_partial ./documentation/concurrency/index.markdown %}
 
-  * [JUnit Integration](/documentation/junit)
-    * Intermittent Tests
-    * Parallel Tests
-    * Load / Soak Tests
-    * Wait for Assertions
-    * Interrupt Capturing Thread Stub
+{% render_partial ./documentation/junit/index.markdown %}
+
   * [Callables](/documentation/callables)
     * Convert to a `Runnable` using Callable Adapter
     * Throw specific exceptions with tempus-fugit Callable
