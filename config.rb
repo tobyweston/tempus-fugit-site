@@ -2,10 +2,10 @@
 project_type = :stand_alone
 
 # Publishing paths
-http_path = "/tempus-fugit-site/"
-http_images_path = "/tempus-fugit-site/images"
-http_fonts_path = "/tempus-fugit-site/fonts"
-css_dir = "public/tempus-fugit-site/stylesheets"
+http_path = "/"
+http_images_path = "/images"
+http_fonts_path = "/fonts"
+css_dir = "public/stylesheets"
 
 # Local development paths
 sass_dir = "sass"
