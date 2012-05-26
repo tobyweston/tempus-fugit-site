@@ -1,6 +1,5 @@
 ---
 layout: page
-title: "Documentation"
 date: 2012-05-20 20:33
 comments: false
 sharing: true
