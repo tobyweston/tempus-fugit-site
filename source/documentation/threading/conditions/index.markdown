@@ -6,7 +6,7 @@ sharing: true
 comments: false
 footer: false
 sidebar: false
-categories: documentation
+categories: [Thread Utilities]
 
 ---
 

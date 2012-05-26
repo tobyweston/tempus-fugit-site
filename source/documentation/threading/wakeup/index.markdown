@@ -6,7 +6,7 @@ comments: false
 sharing: true
 footer: false
 sidebar: false
-categories: documentation
+categories: [Thread Utilities]
 ---
 
 The `Interrupter` class allows you to schedule an `interrupt` on a thread after a specified duration. This can be useful when implementing timeouts on classes that support the use of `interrupt` as an interruption policy. For example, the code below sets up an interrupt to be scheduled after some timeout, before embarking on some potentially long running process. The `Interrupter` and `Thread` classes have been statically imported.

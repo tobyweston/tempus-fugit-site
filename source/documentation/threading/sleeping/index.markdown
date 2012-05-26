@@ -6,7 +6,7 @@ comments: false
 sharing: true
 footer: false
 sidebar: false
-categories: documentation
+categories: [Thread Utilities]
 ---
 
 Often, you'll see code like the example below

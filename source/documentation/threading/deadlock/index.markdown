@@ -6,7 +6,7 @@ comments: false
 sharing: true
 footer: false
 sidebar: false
-categories: documentation
+categories: [Thread Utilities]
 ---
 
 The `DeadlockDetector` class allows you to programmatically detect basic deadlocks in your Java code. You can output deadlocks using the following code (note that printing a thread dump using the `ThreadDump` class will automatically attempt to find any deadlocks).

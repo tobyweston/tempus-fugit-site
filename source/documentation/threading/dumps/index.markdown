@@ -6,7 +6,7 @@ sharing: true
 comments: false
 footer: false
 sidebar: false
-categories: documentation
+categories: [Thread Utilities]
 ---
 
 The `ThreadDump` class offers a programmatic way to print a thread dump. It's not recommended for production code but can be handy in tracking down unexpected behaviour interactively. Using `ThreadDump.dumpThreads(System.out)`, for example, would yield something like the following (formatting inspired by `jstack`).
