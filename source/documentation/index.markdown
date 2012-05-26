@@ -15,5 +15,7 @@ categories:
 
 {% render_partial ./documentation/callables/index.markdown %}
 
+{% render_partial ./documentation/time/index.markdown %}
+
 
 [Start here, Threading Utilities &raquo;](/documentation/threading/)
