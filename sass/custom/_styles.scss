@@ -15,7 +15,8 @@ a:visited, #content .blog-index article h1 a:hover {
 /* ----- main layout ----- */
 
 html {
-  background: #262C33 url("/images/line-tile.png");
+  //background: #262C33 url("/images/line-tile.png");
+  background-image: url("/images/stripe.png");
 }
 
 body {
@@ -38,7 +39,7 @@ body > header {
 }
 
 body > header h1 {
-  background: url("/tempus-fugit-site/images/time-icon-32x32.png") no-repeat 0 8px;
+  background: url("/images/time-icon-32x32.png") no-repeat 0 8px;
   font-size: 2.8em;
   padding-left: 20px;
   text-shadow: rgba(0, 0, 0, 0.8) 0 0 8px;
@@ -144,7 +145,7 @@ body > footer {
 @media only screen and (min-width: 550px) {
 
   body > header h1 {
-    background: url("/tempus-fugit-site/images/time-icon-48x48.png") no-repeat 2px 16px;
+    background: url("/images/time-icon-48x48.png") no-repeat 2px 16px;
     padding-left: 60px;
   }
 
