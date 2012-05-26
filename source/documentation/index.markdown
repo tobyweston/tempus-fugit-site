@@ -13,8 +13,7 @@ categories:
 
 {% render_partial ./documentation/junit/index.markdown %}
 
-  * [Callables](/documentation/callables)
-    * Convert to a `Runnable` using Callable Adapter
-    * Throw specific exceptions with tempus-fugit Callable
+{% render_partial ./documentation/callables/index.markdown %}
 
-[Next, Threading Utilities &raquo;](/documentation/threading/)
+
+[Start here, Threading Utilities &raquo;](/documentation/threading/)
