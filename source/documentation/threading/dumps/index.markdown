@@ -39,4 +39,4 @@ The `dumpThreads` method will also detect any Java-level deadlocks, see the next
 
 
 
-[**Next** &raquo; *Thread Utilities* &raquo; *Deadlock Detection* &raquo;](/documentation/threading/deadlock)
+[Next, Thread Utilities: Deadlock Detection &raquo;](/documentation/threading/deadlock)

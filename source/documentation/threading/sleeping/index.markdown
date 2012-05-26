@@ -53,4 +53,4 @@ This is actually how the `ThreadUtils.sleep` method is implemented within tempus
 
 
 
-[**Next** &raquo; *Thread Utilities* &raquo; *Scheduled Interruption* &raquo;](/documentation/threading/wakeup)
+[Next, Thread Utilities: Scheduled Interruption &raquo;](/documentation/threading/wakeup)

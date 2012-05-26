@@ -70,4 +70,4 @@ waitOrTimeout(not(isWaiting(thread)), timeout(seconds(10)));
 
 
 
-[**Next** &raquo; *Thread Utilities* &raquo; *Miscellaneous* &raquo;](/documentation/threading/misc)
+[Next, Thread Utilities: Miscellaneous &raquo;](/documentation/threading/misc)

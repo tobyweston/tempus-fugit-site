@@ -28,4 +28,4 @@ The `Interrupter` spawns a thread which sleeps (using `WaitFor`) until the timeo
 The `DefaultTimeoutableCompletionService` classes uses this approach to implement a `java.util.concurrent.CompletionService`-like service that will timeout and return any completed tasks and abandoning any remaining.
 
 
-[**Next** &raquo; *Thread Utilities* &raquo; *Thread Dumps* &raquo;](/documentation/threading/dumps)
+[Next, Thread Utilities: Thread Dumps &raquo;](/documentation/threading/dumps)

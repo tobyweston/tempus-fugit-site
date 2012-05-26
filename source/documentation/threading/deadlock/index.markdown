@@ -71,4 +71,4 @@ Here, the `Kidnapper` is unwilling to release poor Nibbles the `Cat` until he ha
 
 
 
-[**Next** &raquo; *Thread Utilities* &raquo; *Thread Conditions* &raquo;](/documentation/threading/conditions)
+[Next, Thread Utilities: Thread Conditions &raquo;](/documentation/threading/conditions)

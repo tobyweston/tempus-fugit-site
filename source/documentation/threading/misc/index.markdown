@@ -9,9 +9,9 @@ sidebar: false
 categories: documentation
 ---
 
-## Wrap Exceptions as Another Type
+## Wrap Exceptions
 
-  * Not exclusively for concurrent use, the `ExceptionWrapper` class allows you to run arbitrary code in a `Callable` block catching any `Throwable` as an exception of your choice, embedded the originating exception as the new exception's `cause`. For example,
+The `ExceptionWrapper` class allows you to run arbitrary code in a `Callable` block catching any `Throwable` and rethrowing as an exception of your choice. The thrown exception embeds the originating exception as it's cause. For example,
 
 
 {% codeblock lang:java %}
@@ -24,7 +24,9 @@ ExceptionWrapper.wrapAnyException(new Callable<Object>() {
 {% endcodeblock %}
 
 
-You can also catch any `Exception` and rethrow as a `RuntimeException` with the originating exception as the `cause`. The example below shows the anonymous `Callable` being created in the method `something`.
+If you'd rather just convert checked exceptions to `RuntimeException`, just use the 'wrapAsRuntimeException` method. Again, it will embed the originating exception so you won't loose the information.
+
+The example below has the creation of the anonymous `Callable` class pushed into the method `something`.
 
 
 {% codeblock lang:java %}
@@ -32,10 +34,17 @@ ExceptionWrapper.wrapAsRuntimeException(something());
 {% endcodeblock %}
 
 
-## A Default Thread Factory
+## Default Thread Factory
 
-  * As a convenience class, the `DefaultThreadFactory` offers an implementation of `java.util.concurrent.ThreadFactory` that creates a thread using the single argument constructor of `Thread`.
+Nothing fancy, the `DefaultThreadFactory` offers the default implementation of `java.util.concurrent.ThreadFactory` shown below.
+
+{% codeblock lang:java %}
+public class DefaultThreadFactory implements ThreadFactory {
+
+    public Thread newThread(Runnable runnable) {
+        return new Thread(runnable);
+    }
+}{% endcodeblock %}
 
 
-
-[**Next** &raquo; *Concurrency Utilities* &raquo;](/documentation/threading/concurrency/)
+[Next, Concurrency Utilities &raquo;](/documentation/concurrency/)
