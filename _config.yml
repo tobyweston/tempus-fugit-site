@@ -28,17 +28,17 @@ email:
 # If publishing to a subdirectory as in http://site.com/project set 'root: /project'
 # when previewing use "/tempus-fugit-site", when deploying use "/"
 root: /tempus-fugit-site
-permalink: /blog/:year/:month/:day/:title/
+permalink: /recipes/:year/:month/:day/:title/
 source: source
 destination: public/tempus-fugit-site
 plugins: plugins
 code_dir: downloads/code
-category_dir: blog/categories
+category_dir: recipes/categories
 markdown: rdiscount
 pygments: false # default python pygments have been replaced by pygments.rb
 
 paginate: 10          # Posts per page on the blog index
-pagination_dir: blog  # Directory base for pagination URLs eg. /blog/page/2/
+pagination_dir: recipes  # Directory base for pagination URLs eg. /blog/page/2/
 recent_posts: 10       # Posts in the sidebar Recent Posts section
 excerpt_link: "Read on &rarr;"  # "Continue reading" link text at the bottom of excerpted articles
 
