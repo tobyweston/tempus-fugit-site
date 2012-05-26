@@ -6,8 +6,14 @@ sharing: false
 footer: false
 ---
 
-The tempus-fugit library helps you write and test concurrent code. It helps you to
+The tempus-fugit library helps you write and test concurrent code.
+
+## It helps you...
 
 * Write cleaner concurrent code with less boiler plate code
 * Introduce determinism back into your concurrent tests
-* Leverage your synergies and be awesome
+* Leverage your synergies and generally be awesome
+
+## Ready to Get Started?
+
+Just download from Maven, look through the [documentation](/documentation) or browse the [recipes archive](/recipes/archives) for tips.
