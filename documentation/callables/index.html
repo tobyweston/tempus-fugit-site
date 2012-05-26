@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Callables - tempus-fugit</title>
+  <meta name="author" content="Toby Weston">
+
+  
+  <meta name="description" content="Callables May 20th, 2012 Callable Adapter The java.util.concurrent.Executors class has helper methods to convert from a Runnable to a Callable but &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://tempusfugitlibrary.org/documentation/callables">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="tempus-fugit" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">tempus-fugit</a></h1>
+  
+    <h2>Java micro-library for writing & testing concurrent code</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:tempusfugitlibrary.org" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+    <li><a href="/">Home</a></li>
+    <li><a href="/documentation/">Documentation</a></li>
+    <li><a href="/documentation/download">Download</a></li>
+    <li><a href="https://github.com/tobyweston/tempus-fugit">Source</a></li>
+    <li><a href="/recipes">Recipes</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article role="article">
+  
+  <header>
+    <h1 class="entry-title">Callables</h1>
+    <p class="meta">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-20T20:33:00+01:00" pubdate data-updated="true">May 20<span>th</span>, 2012</time></p>
+  </header>
+  
+  <h2>Callable Adapter</h2>
+
+<p>The <code>java.util.concurrent.Executors</code> class has helper methods to convert from a <code>Runnable</code> to a <code>Callable</code> but lacks a counterpart to convert a <code>Callable</code> to a <code>Runnable</code>. This is presumably because a <code>Runnable</code> lacks the ability to throw exceptions or return values.</p>
+
+<p>Both <code>Runnable</code> and <code>Callable</code> are handy interfaces to express lamda-like functionality in Java. Discounting their close relationship to concurrency mechanisms in Java, they both really just represent something that can be called. Choosing between the two, the <code>Callable</code> is more powerful.</p>
+
+<p>The <code>CallableAdapter</code> class will convert from a <code>Callable</code> into a <code>Runnable</code> wrapping any exception as a <code>RuntimeException</code> and discarding any return type. This allows you to write general task code in the form of a <code>Callable</code> without necessarily being hampered if you need to pass in a <code>Runnable</code> to some framework code.</p>
+
+<p>As a concrete example, Java&#8217;s <code>ScheduledExecutorService</code> class doesn&#8217;t allow you to schedule a task with a fixed delay or at a fixed rate. The interface takes a <code>Runnable</code>. However, using the adapter you can schedule a <code>Callable</code> at a fixed rate (ignoring the result). The underlying <code>Callable</code> task could then be used elsewhere where the result is actually used.</p>
+
+<h2>tempus-fugit Callable</h2>
+
+<p>The tempus-fugit <code>Callable</code> interface extends <code>java.util.concurrent.Callable</code> but allows you to specify the exception as a generic type. This class has a fairly limited usage and isn&#8217;t recommended over the standard Java version. Instead, if you create a method that takes a <code>java.util.concurrent.Callable</code> as a argument, calling it will force the method to throw <code>Exception</code>. If instead, you pass in a <code>com.google.code.tempusfugit.concurrency.Callable</code>, you can specify the specific exception to throw and therefore avoid being forced to throw <code>Exception</code>. For example</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">foo</span><span class="o">(</span><span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">concurrent</span><span class="o">.</span><span class="na">Callable</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">callable</span><span class="o">)</span> <span class="kd">throws</span> <span class="o">**</span><span class="n">Exception</span><span class="o">**</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">callable</span><span class="o">.</span><span class="na">call</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Whereas using the tempus-fugit version allows a more specific exception to be thrown.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">bar</span><span class="o">(</span><span class="n">com</span><span class="o">.</span><span class="na">google</span><span class="o">.</span><span class="na">code</span><span class="o">.</span><span class="na">tempusfugit</span><span class="o">.</span><span class="na">concurrency</span><span class="o">.</span><span class="na">Callable</span><span class="o">&lt;</span><span class="n">T</span><span class="o">,</span> <span class="n">RuntimeException</span><span class="o">&gt;</span> <span class="n">callable</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">callable</span><span class="o">.</span><span class="na">call</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><a href="/documentation/time/">Next, Testing Time Sensitive Code &raquo;</a></p>
+
+  
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+    <h1>Recent Recipes</h1>
+    <ul id="recent_posts">
+        
+        <li class="post">
+            <a href="/recipes/2012/05/20/testing-concurrent-code/">Testing Concurrent Code</a>
+        </li>
+        
+    </ul>
+    <p><a href="/recipes/archives">Recipe Archive</a></p>
+</section>
+
+
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/116267404189265967722?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+<section>
+    <h1>Contents</h1>
+    
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - Toby Weston -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

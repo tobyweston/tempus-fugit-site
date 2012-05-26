@@ -1,0 +1,663 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>JUnit Integration - tempus-fugit</title>
+  <meta name="author" content="Toby Weston">
+
+  
+  <meta name="description" content="JUnit Integration May 20th, 2012 Intermittent Tests As much as possible, you aim to have a completely deterministic tests but despite your best &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://tempusfugitlibrary.org/documentation/junit">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="tempus-fugit" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">tempus-fugit</a></h1>
+  
+    <h2>Java micro-library for writing & testing concurrent code</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:tempusfugitlibrary.org" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+    <li><a href="/">Home</a></li>
+    <li><a href="/documentation/">Documentation</a></li>
+    <li><a href="/documentation/download">Download</a></li>
+    <li><a href="https://github.com/tobyweston/tempus-fugit">Source</a></li>
+    <li><a href="/recipes">Recipes</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article role="article">
+  
+  <header>
+    <h1 class="entry-title">JUnit Integration</h1>
+    <p class="meta">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-20T20:33:00+01:00" pubdate data-updated="true">May 20<span>th</span>, 2012</time></p>
+  </header>
+  
+  <h3>Intermittent Tests</h3>
+
+<p>As much as possible, you aim to have a completely deterministic tests but despite your best efforts, the odd flickering test can still get through. Occasionally, you might want to run such a test repeatedly to get an idea of its indeterminacy. The <code>Intermittent</code> annotation can be combined with the <code>IntermittentTestRunner</code> to provide this behaviour along side <a href="http://junit.org/">junit</a>.</p>
+
+<p>You simply mark a junit test method (or class) as potentially intermittent using the <code>Intermittent</code> annotation as follows.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Test</span>
+</span><span class='line'><span class="nd">@Intermittent</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">flickering</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>   <span class="c1">// ...</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can then use the <code>@RunWith</code> annotation to run the test using the <code>IntermittentTestRunner</code>. Any <code>@Before</code> or <code>@After</code> methods will be run once for each test repetition. The example below also shows that the repetition count can be overridden on the method annotation.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@RunWith</span><span class="o">(</span><span class="n">IntermittentTestRunner</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IntermittentTestRunnerTest</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">testCounter</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">afterCounter</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">afterClassCounter</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="nd">@Intermittent</span><span class="o">(</span><span class="n">repetition</span> <span class="o">=</span> <span class="mi">99</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">annotatedTest</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">testCounter</span><span class="o">++;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@After</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">assertAfterIsCalledRepeatedlyForAnnotatedTests</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">assertThat</span><span class="o">(</span><span class="n">testCounter</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="n">equalTo</span><span class="o">(++</span><span class="n">afterCounter</span><span class="o">)));</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@AfterClass</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">assertAfterClassIsCalledOnce</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">assertThat</span><span class="o">(++</span><span class="n">afterClassCounter</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="n">equalTo</span><span class="o">(</span><span class="mi">1</span><span class="o">)));</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@AfterClass</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">assertAnnotatedTestRunsMultipleTimes</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">assertThat</span><span class="o">(</span><span class="n">testCounter</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="n">equalTo</span><span class="o">(</span><span class="mi">99</span><span class="o">)));</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you annotate the class rather than individual test methods, every test method of the class will be treated as if it were marked as <code>@Intermittent</code>.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@RunWith</span><span class="o">(</span><span class="n">IntermittentTestRunner</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+</span><span class='line'><span class="nd">@Intermittent</span><span class="o">(</span><span class="n">repetition</span> <span class="o">=</span> <span class="mi">10</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IntermittentTestRunnerTest</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">testCounter</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">annotatedTest</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">testCounter</span><span class="o">++;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">anotherAnnotatedTest</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">testCounter</span><span class="o">++;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@AfterClass</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">assertAnnotatedTestRunsMultipleTimes</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">assertThat</span><span class="o">(</span><span class="n">testCounter</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="n">equalTo</span><span class="o">(</span><span class="mi">20</span><span class="o">)));</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Parallel Tests</h2>
+
+<p>The tempus-fugit library allows you to run tests methods within classes in parallel. Each test method within a class will run on its own thread and in parallel with any other test methods in that class. The number of threads for a given test class will be equal to the number of test methods within that class.</p>
+
+<p>You can use the <code>ConcurrentTestRunner</code> runner to run all test methods within a class in parallel. Simply mark your test to be <code>@RunWith</code> the <code>ConcurrentTestRunner</code> class as below.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@RunWith</span><span class="o">(</span><span class="n">ConcurrentTestRunner</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ConcurrentTestRunnerTest</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">shouldRunInParallel1</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;I&#39;m running on thread &quot;</span> <span class="o">+</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">shouldRunInParallel2</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;I&#39;m running on thread &quot;</span> <span class="o">+</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">shouldRunInParallel3</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;I&#39;m running on thread &quot;</span> <span class="o">+</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In this example, each of the individual test methods are run once but in their own thread, all spawned roughly at the same time. The output from the above might look like the following.</p>
+
+<pre><code>I'm running on thread ConcurrentTestRunner-Thread-0
+I'm running on thread ConcurrentTestRunner-Thread-2
+I'm running on thread ConcurrentTestRunner-Thread-1
+</code></pre>
+
+<p>Another run might yield a different interpolation.</p>
+
+<pre><code>I'm running on thread ConcurrentTestRunner-Thread-1
+I'm running on thread ConcurrentTestRunner-Thread-0
+I'm running on thread ConcurrentTestRunner-Thread-2
+</code></pre>
+
+<h2>Load / Soak Tests</h2>
+
+<p>The tempus-fugit library offers a <code>RepeatingRule</code> and <code>ConcurrentRule</code> that can be used to run a test method multiple times and across multiple threads. This can be useful when writing load or soak tests. For example, you might want to sanity check that your synchronisation is working under load. Both rules work use an annotation and can be used independently or together.</p>
+
+<p>To run multiple instances of a single test method in parallel, you annotate the test method with the associated <code>Concurrent</code> annotation and declare the rule in your test class. For example, you might test the <code>AtomicInteger</code> class in a similar way to this.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RunConcurrentlyTest</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Rule</span> <span class="kd">public</span> <span class="n">ConcurrentRule</span> <span class="n">rule</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ConcurrentRule</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">AtomicInteger</span> <span class="n">counter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicInteger</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="nd">@Concurrent</span> <span class="o">(</span><span class="n">count</span> <span class="o">=</span> <span class="mi">5</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">runsMultipleTimes</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">counter</span><span class="o">.</span><span class="na">getAndIncrement</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'> <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here, the test method is run in parallel across five threads which may or may not expose potential threading issues. It&#8217;s not recommended you use this as your only concurrent testing strategy but it may occasionally find a use.</p>
+
+<p>To run a test method multiple times, you can take advantage of the <code>Repeating</code> annotation and declare the rule in your test class. This is similar to using the <code>Intermittent</code> annotation but unlike using the <code>@RunWith</code> mechanism, using the <code>Rule</code> will <em>not</em> execute any <code>@Before</code> or <code>@After</code> methods between runs. Using <code>Repeating</code> is also more explicit that you intend to run some kind of load test rather than indicating that a test is intermittently failing.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RepeatingRuleTest</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Rule</span> <span class="kd">public</span> <span class="n">RepeatingRule</span> <span class="n">rule</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RepeatingRule</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="nd">@Repeating</span><span class="o">(</span><span class="n">repetition</span> <span class="o">=</span> <span class="mi">99</span><span class="o">)</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">annotatedTest</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">counter</span><span class="o">++;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@After</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">annotatedTestRunsMultipleTimes</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">assertThat</span><span class="o">(</span><span class="n">counter</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="mi">99</span><span class="o">));</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Combining the <code>Concurrent</code> with the <code>Repeating</code> annotation allows you to run a test method repeatedly and across threads. For example, running the following</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RunConcurrentlyTest</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Rule</span> <span class="kd">public</span> <span class="n">ConcurrentRule</span> <span class="n">concurrently</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ConcurrentRule</span><span class="o">();</span>
+</span><span class='line'>    <span class="nd">@Rule</span> <span class="kd">public</span> <span class="n">RepeatingRule</span> <span class="n">repeatedly</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RepeatingRule</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">AtomicInteger</span> <span class="n">counter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicInteger</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Test</span>
+</span><span class='line'>    <span class="o">**</span><span class="nd">@Concurrent</span> <span class="o">(</span><span class="n">count</span> <span class="o">=</span> <span class="mi">5</span><span class="o">)</span>
+</span><span class='line'>    <span class="nd">@Repeating</span> <span class="o">(</span><span class="n">repetition</span> <span class="o">=</span> <span class="mi">10</span><span class="o">)**</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">runsMultipleTimes</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">counter</span><span class="o">.</span><span class="na">getAndIncrement</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'> <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Will repeat the test method ten times in five threads. Each thread will run the test method ten times, so in our example, the counter will be incremented to fifty.</p>
+
+<h2>Wait for Assertions</h2>
+
+<p>The <code>WaitFor</code> class can be used to wait for a condition to hold. You can use it within your tests to wait for some asynchronous process to complete and so make an assertion in a test.</p>
+
+<p>In the example below, a test verifies that the action of clicking a button will toggle some switch to a different position. However, this test may or may not pass if the <code>clickButton()</code> kicks off an asynchronous process to update the toggle position. It may return immediately having not yet changed the position.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Test</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">toggleButton</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">toggle</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="n">ON</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">clickButton</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">toggle</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="n">OFF</span><span class="o">));</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Rewriting the test using a <code>WaitFor</code> would look like this</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Test</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">toggleButton</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">TimeoutException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">toggle</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="n">ON</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">clickButton</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">waitOrTimeout</span><span class="o">(</span><span class="k">new</span> <span class="n">Condition</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isSatisfied</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">toggle</span> <span class="o">==</span> <span class="n">OFF</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">},</span> <span class="n">seconds</span><span class="o">(</span><span class="mi">5</span><span class="o">));</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here, the test will retry the <code>Condition</code> for five seconds before finally giving up and failing the test. If the condition is true immediately, the wait will continue immediately and the test will continue. By extracting a method to create the <code>Condition</code>, you can further refactor the test to be more expressive and start to create a library of reusable conditions.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Test</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">toggleButton</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">TimeoutException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">toggle</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="n">ON</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">clickButton</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">waitOrTimeout</span><span class="o">(</span><span class="n">toggleIs</span><span class="o">(</span><span class="n">OFF</span><span class="o">),</span> <span class="n">seconds</span><span class="o">(</span><span class="mi">5</span><span class="o">));</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">Condition</span> <span class="nf">toggleIs</span><span class="o">(</span><span class="kd">final</span> <span class="n">Position</span> <span class="n">position</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="nf">Condition</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isSatisfied</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">toggle</span> <span class="o">==</span> <span class="n">position</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">};</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>A wait which times out will through a <code>TimeoutException</code> although, since 1.2, you can also supply the <code>waitOrTimeout</code> call with behaviour to execute on timeout (as a <code>Callable</code>). For example;</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">waitOrTimeout</span><span class="o">(</span><span class="n">serverIsShutdown</span><span class="o">(),</span> <span class="k">new</span> <span class="n">Callable</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">,</span> <span class="n">RuntimeException</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Void</span> <span class="nf">call</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">RuntimeException</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">notifyObservers</span><span class="o">(</span><span class="k">new</span> <span class="n">FailedToShutdownEvent</span><span class="o">());</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">},</span> <span class="n">timeout</span><span class="o">(</span><span class="n">millis</span><span class="o">(</span><span class="mi">500</span><span class="o">)));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>will not throw a <code>TimeoutException</code> but instead notify some observer of the failure. Refactored a little, it would look like this</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">waitOrTimeout</span><span class="o">(</span><span class="n">serverIsShutdown</span><span class="o">(),</span> <span class="n">notifyFailureOnTimeout</span><span class="o">(),</span> <span class="n">timeout</span><span class="o">(</span><span class="n">millis</span><span class="o">(</span><span class="mi">500</span><span class="o">)));</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">Callable</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">,</span> <span class="n">RuntimeException</span><span class="o">&gt;</span> <span class="n">notifyFailureOnTimeout</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="n">Callable</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">,</span> <span class="n">RuntimeException</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="n">Void</span> <span class="nf">call</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">RuntimeException</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">notifyObservers</span><span class="o">(</span><span class="k">new</span> <span class="n">FailedToShutdownEvent</span><span class="o">());</span>
+</span><span class='line'>            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Interrupt Capturing Thread Stub</h2>
+
+<p>It can be tricky to test that an interrupt has been called on a thread because of the possibility of race conditions between calling <code>interrupt</code> and checking the status of the interrupt flag using <code>Thread.isInterrupted()</code> or <code>Thread.interrupted</code>. For example, the interrupt status can be reset when a thread goes into the <code>TERMINATED</code> state. You can use the <code>WaitFor</code> class to express an assertion must be true within a given time (as below) but in this case, the race conditions can still occur (due to the frequency of the check whilst waiting). In the example below, the created thread will perform some blocking function that can be interrupted (for example, sleeping) and we&#8217;re testing that the call to <code>interrupt</code> will wake and change the interrupt status flag (asserting against <code>thread.isInterrupted</code>).</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Test</span> <span class="o">(</span><span class="n">timeout</span> <span class="o">=</span> <span class="mi">500</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">interrupted</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">TimeoutException</span><span class="o">,</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">final</span> <span class="n">Thread</span> <span class="n">thread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">(...));</span>
+</span><span class='line'>    <span class="n">thread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">waitOrTimeout</span><span class="o">(</span><span class="n">threadIsWaiting</span><span class="o">(</span><span class="n">thread</span><span class="o">),</span> <span class="n">millis</span><span class="o">(</span><span class="mi">500</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">thread</span><span class="o">.</span><span class="na">interrupt</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">waitOrTimeout</span><span class="o">(</span><span class="k">new</span> <span class="n">Condition</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isSatisfied</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">thread</span><span class="o">.</span><span class="na">isInterrupted</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">},</span> <span class="n">millis</span><span class="o">(</span><span class="mi">500</span><span class="o">));</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It may be simpler to use a <em>stub</em> to capture the interrupt. The <code>InterruptCapturingThread</code> class of tempus-fugit is just a stub extending <code>Thread</code> which records and gives access to stack traces of threads that call <code>interrupt</code> on it.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Test</span> <span class="o">(</span><span class="n">timeout</span> <span class="o">=</span> <span class="mi">500</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">interrupted</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">TimeoutException</span><span class="o">,</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">InterruptCapturingThread</span> <span class="n">thread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InterruptCapturingThread</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">(...));</span>
+</span><span class='line'>    <span class="n">thread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">waitOrTimeout</span><span class="o">(</span><span class="n">threadIsWaiting</span><span class="o">(</span><span class="n">thread</span><span class="o">),</span> <span class="n">millis</span><span class="o">(</span><span class="mi">500</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">thread</span><span class="o">.</span><span class="na">interrupt</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">waitOrTimeout</span><span class="o">(</span><span class="n">not</span><span class="o">(</span><span class="n">threadIsWaiting</span><span class="o">(</span><span class="n">thread</span><span class="o">)),</span> <span class="n">millis</span><span class="o">(</span><span class="mi">500</span><span class="o">));</span>
+</span><span class='line'>    <span class="o">**</span><span class="n">assertThat</span><span class="o">(</span><span class="n">thread</span><span class="o">.</span><span class="na">getInterrupters</span><span class="o">().</span><span class="na">isEmpty</span><span class="o">(),</span> <span class="n">is</span><span class="o">(</span><span class="kc">false</span><span class="o">));**</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>For testing purposes, you can also get a view on the stack traces of the threads that called <code>interrupt</code> on your thread. Calling <code>thread.printStackTraceOfInterruptingThreads(System.out)</code> from the example above would show something like the following.</p>
+
+<pre><code>java.lang.Thread.getStackTrace(Thread.java:1409)
+   com.google.code.tempusfugit.concurrency.InterruptCapturingThread.interrupt(InterruptCapturingThread.java:61)
+   com.google.code.tempusfugit.concurrency.InterruptCapturingThreadTest.interrupted(InterruptCapturingThreadTest.java:39)
+   sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+   sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+   sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+   java.lang.reflect.Method.invoke(Method.java:585)
+   org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)
+   org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)
+   org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)
+   org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)
+   org.junit.internal.runners.statements.FailOnTimeout$1.run(FailOnTimeout.java:28)
+</code></pre>
+
+<p><a href="/documentation/callables/">Next, Callables &raquo;</a></p>
+
+  
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+    <h1>Recent Recipes</h1>
+    <ul id="recent_posts">
+        
+        <li class="post">
+            <a href="/recipes/2012/05/20/testing-concurrent-code/">Testing Concurrent Code</a>
+        </li>
+        
+    </ul>
+    <p><a href="/recipes/archives">Recipe Archive</a></p>
+</section>
+
+
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/116267404189265967722?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+<section>
+    <h1>Contents</h1>
+    
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - Toby Weston -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

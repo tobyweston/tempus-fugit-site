@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Sleeping and Interruptions - tempus-fugit</title>
+  <meta name="author" content="Toby Weston">
+
+  
+  <meta name="description" content="Sleeping and Interruptions May 25th, 2012 Often, you&#8217;ll see code like the example below 1
+2
+3
+4
+5
+try { Thread.sleep(100);
+} catch ( &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://tempusfugitlibrary.org/documentation/threading/sleeping">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="tempus-fugit" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  
+
+</head>
+
+<body   class="no-sidebar"  >
+  <header role="banner"><hgroup>
+  <h1><a href="/">tempus-fugit</a></h1>
+  
+    <h2>Java micro-library for writing & testing concurrent code</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:tempusfugitlibrary.org" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+    <li><a href="/">Home</a></li>
+    <li><a href="/documentation/">Documentation</a></li>
+    <li><a href="/documentation/download">Download</a></li>
+    <li><a href="https://github.com/tobyweston/tempus-fugit">Source</a></li>
+    <li><a href="/recipes">Recipes</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article role="article">
+  
+  <header>
+    <h1 class="entry-title">Sleeping and Interruptions</h1>
+    <p class="meta">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-25T19:41:00+01:00" pubdate data-updated="true">May 25<span>th</span>, 2012</time></p>
+  </header>
+  
+  <p>Often, you&#8217;ll see code like the example below</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>   <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">100</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>   <span class="c1">// nothing</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>tempus-fugit captures the annoying boiler plate code needed to reset the interrupt flat in situations where you can&#8217;t or don&#8217;t want to rethrow the <code>InterruptedException</code>.</p>
+
+<p>Using the <code>ThreadUtils.sleep method</code>, the above code is rewritten as.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">sleep</span><span class="o">(</span><span class="n">millis</span><span class="o">(</span><span class="mi">100</span><span class="o">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This ensures that the interrupt flag is reset and is more explicit about the <a href="time.html#Duration">duration</a> of the sleep.</p>
+
+<p>If you want to ensure the interrupt flag is reset for other code, you can use the <code>ThreadUtils.resetInterruptFlagWhen</code> method directly. The <code>Interruptible</code> interface is used to highlight that the lamda-like call you want to execute does in fact throw the <code>InterruptedException</code>. For example;</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">resetInterruptFlagWhen</span><span class="o">(</span><span class="k">new</span> <span class="n">Interruptible</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Void</span> <span class="nf">call</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">100</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Extracting the lamda-like <code>Interruptible</code> to a method makes the code more expressive;</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">resetInterruptFlagWhen</span><span class="o">(</span><span class="n">sleepingIsInterrupted</span><span class="o">());</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is actually how the <code>ThreadUtils.sleep</code> method is implemented within tempus-fugit.</p>
+
+<p><a href="/documentation/threading/wakeup">Next, Thread Utilities: Scheduled Interruption &raquo;</a></p>
+
+  
+</article>
+
+</div>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - Toby Weston -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
