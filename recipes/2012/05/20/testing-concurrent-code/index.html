@@ -1,0 +1,249 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Testing Concurrent Code - tempus-fugit</title>
+  <meta name="author" content="Toby Weston">
+
+  
+  <meta name="description" content="Testing concurrency can be hard. When you fire up threads from within a test, it&#8217;s difficult not to introduce concurrency bugs in the test code &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://tempusfugitlibrary.org/recipes/2012/05/20/testing-concurrent-code">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="tempus-fugit" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Averia+Libre:300' rel='stylesheet' type='text/css'>
+  
+
+</head>
+
+<body   class="no-sidebar"  >
+  <header role="banner"><hgroup>
+  <h1><a href="/">tempus-fugit</a></h1>
+  
+    <h2>Java micro-library for writing & testing concurrent code</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:tempusfugitlibrary.org" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+    <li><a href="/">Home</a></li>
+    <li><a href="/documentation/">Documentation</a></li>
+    <li><a href="/documentation/download">Download</a></li>
+    <li><a href="https://github.com/tobyweston/tempus-fugit">Source</a></li>
+    <li><a href="/recipes">Recipes</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Testing Concurrent Code</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-20T20:33:00+01:00" pubdate data-updated="true">May 20<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Testing concurrency can be hard. When you fire up threads from within a test, it&#8217;s difficult not to introduce concurrency bugs in the test code and be sure you&#8217;re actually exercising the code with the intended interleaving. There must be a better way&#8230;</p>
+
+<h2>Separate the Concurrency Policy from Behaviour</h2>
+
+<p><a href="http://www.growing-object-oriented-software.com/">GOOS</a> amongst other people recommend separating the concurrency policy from the parts of the system that are doing the work. So, for example, if you have some form of &#8220;executor&#8221; which is responsible for farming work out concurrently and behaviour defined separately, you can test each independently and just verify that they collaborate to achieve &#8220;worker&#8221; behaviour concurrently. Make sense?</p>
+
+<!-- more -->
+
+
+<p>As an example, <a href="https://github.com/tobyweston/tempus-fugit/blob/master/tempus-fugit/src/test/java/com/google/code/tempusfugit/concurrency/ConcurrentSchedulerTest.java">this test from tempus-fugit</a> demonstrates the idea. The <code>Scheduler</code>&#8217;s behaviour (which is essentially to &#8220;schedule&#8221; tasks) is independent from <em>how</em> it actually achieves this. In this case, it delegates to an <code>Executor</code> and so this doesn&#8217;t need to be tested with any threads. It&#8217;s a simple collaborator style test.</p>
+
+<p>Having said that, there may be times you actually want to run your class &#8216;in context&#8217; in a multi-threaded way. The trick here is to keep the test deterministic. Well, I say that, there&#8217;s a couple of choices&#8230;</p>
+
+<h2>Deterministic</h2>
+
+<p>If you can setup your test to progress in a deterministic way, waiting at key points for conditions to be met before moving forward, you can try to simulate a specific process interleaving to test. This means understanding exactly what you want to test (for example, forcing the code into a deadlock) and stepping through deterministically (for example, using abstractions like <code>CountdownLatche</code> to <em>synchronise</em> the moving parts).</p>
+
+<p>When you attempt to make some multi-threaded test syncrhonise its moving parts, you can use whatever concurrency abstraction is available to you but it&#8217;s difficult because its concurrent; things could happen in an unexpected order. Often people try to mitigate this in tests by introducing <code>sleep</code> calls. We generally don&#8217;t like to sleep in a test because it can introduce non-determinism. Just because the right sleep amount on one machine <em>usually</em> causes the affect you&#8217;re looking for, it doesn&#8217;t mean it&#8217;ll be the same on the next machine. It&#8217;ll also make the test run slower and when you&#8217;ve got thousands of tests to run, every ms counts. If you try and lower the sleep period, more non-determinism comes in. It&#8217;s not pretty.</p>
+
+<p>Some examples of forcing specific interleaving include</p>
+
+<ul>
+<li><a href="https://github.com/tobyweston/tempus-fugit/blob/master/tempus-fugit/src/test/java/com/google/code/tempusfugit/concurrency/DeadlockDetectorTest.java">Forcing a deadlock</a> using <code>CountdownLatch</code></li>
+<li><a href="https://github.com/tobyweston/tempus-fugit/blob/master/tempus-fugit/src/test/java/com/google/code/tempusfugit/concurrency/ThreadUtilsTest.java">Setting up a thread to be interrupted</a></li>
+</ul>
+
+
+<p>Another gotcha is where the main test thread will finish before any newly spawned threads under test complete. This is an easy trap to fall into with UI testing. Waiting for a specific condition rather than allowing the test thread to finish often helps. For example using <a href="/documentation/time/waiting">WaitFor</a>. See the article <a href="http://baddotrobot.com/blog/2008/12/30/be-explicit-about-ui-thread-in-swt/">Be Explicit with the UI Thread</a> for more details around this for UI testing.</p>
+
+<h2>Soak / Load Testing</h2>
+
+<p>Another choice is to bombard your classes in an attempt to overload them and force them to betray some subtle concurrency issue. Here, just as in the other style, you&#8217;ll need to setup up specific assertions so that you can tell if and when the classes betray themselves. Of course there is no guarantee that you&#8217;ll simulate a problem, you might never see the unlike timing needed.</p>
+
+<p>The tempus-fugit library offers a declarative way to setup tests to run repeatedly and in parallel, see <a href="/documentation/junit/load">Load / Soak Tests</a>.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Toby Weston</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-20T20:33:00+01:00" pubdate data-updated="true">May 20<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/recipes/categories/concurrency/'>Concurrency</a>, <a class='category' href='/recipes/categories/testing/'>Testing</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://tempusfugitlibrary.org/recipes/2012/05/20/testing-concurrent-code/" data-via="" data-counturl="http://tempusfugitlibrary.org/recipes/2012/05/20/testing-concurrent-code/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+      
+        <a class="basic-alignment right" href="/recipes/2012/05/26/detecting-deadlocks/" title="Next Post: Detecting Deadlocks">Detecting Deadlocks &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Over to you...</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2009-2012 - Toby Weston -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a>, theme by <a href="https://twitter.com/#!/alemelandri">@alemelandri</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'tempus-fugit-library';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://tempusfugitlibrary.org/recipes/2012/05/20/testing-concurrent-code/';
+        var disqus_url = 'http://tempusfugitlibrary.org/recipes/2012/05/20/testing-concurrent-code/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

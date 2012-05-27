@@ -1,0 +1,404 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Annotations - tempus-fugit</title>
+  <meta name="author" content="Toby Weston">
+
+  
+  <meta name="description" content="Annotations May 26th, 2012 The annotations package contains variations or implementations of Brian Goetz and Tim Peierls&#8217; Concurrency In &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://tempusfugitlibrary.org/documentation/annotations">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="tempus-fugit" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Averia+Libre:300' rel='stylesheet' type='text/css'>
+  
+
+</head>
+
+<body   class="no-sidebar"  >
+  <header role="banner"><hgroup>
+  <h1><a href="/">tempus-fugit</a></h1>
+  
+    <h2>Java micro-library for writing & testing concurrent code</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:tempusfugitlibrary.org" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+    <li><a href="/">Home</a></li>
+    <li><a href="/documentation/">Documentation</a></li>
+    <li><a href="/documentation/download">Download</a></li>
+    <li><a href="https://github.com/tobyweston/tempus-fugit">Source</a></li>
+    <li><a href="/recipes">Recipes</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article role="article">
+  
+  <header>
+    <h1 class="entry-title">Annotations</h1>
+    <p class="meta">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-26T18:26:00+01:00" pubdate data-updated="true">May 26<span>th</span>, 2012</time></p>
+  </header>
+  
+  <p>The annotations package contains variations or implementations of Brian Goetz and Tim Peierls&#8217; <a href="http://www.javaconcurrencyinpractice.com/">Concurrency In Practice</a> annotations as well as some additional annotations useful when writing concurrent code.</p>
+
+<h2>@Concurrent</h2>
+
+<p>The <code>Concurrent</code> annotation is fully documented in the <a href="documentation/junit/parallel">concurrency</a> section and offers a way to either document a method as potentially being run from a concurrent context or combined with a <code>ConcurrentRule</code> or <code>ConcurrentTestRunner</code>, mark a JUnit test to run in parallel.</p>
+
+<h2>@Immutable</h2>
+
+<p>The <code>Immutable</code> annotation offers a way to document the intent that a class should be immutable.</p>
+
+<p>Although potentially difficult to implement fully, this can be combined with AOP to try and enforce immutability. An example of a partially implemented AspectJ aspect is provided with tempus-fugit and reproduced here.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">google</span><span class="o">.</span><span class="na">code</span><span class="o">.</span><span class="na">tempusfugit</span><span class="o">.</span><span class="na">concurrency</span><span class="o">.</span><span class="na">annotations</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.lang.reflect.Field</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">junit.framework.TestCase</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.google.code.tempusfugit.concurrency.annotations.Immutable</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">abstract</span> <span class="n">aspect</span> <span class="n">DeclareImmutableError</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">pointcut</span> <span class="nf">testCase</span><span class="o">()</span> <span class="o">:</span> <span class="n">within</span><span class="o">(</span><span class="n">TestCase</span><span class="o">+);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">pointcut</span> <span class="nf">mutators</span><span class="o">()</span> <span class="o">:</span> <span class="n">call</span><span class="o">(*.</span><span class="na">new</span><span class="o">())</span> <span class="o">||</span> <span class="n">call</span><span class="o">(*</span> <span class="o">*.</span><span class="na">set</span><span class="o">*(..))</span> <span class="o">||</span> <span class="n">call</span><span class="o">(*</span> <span class="o">*.</span><span class="na">add</span><span class="o">*(..));</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">pointcut</span> <span class="nf">immutable</span><span class="o">()</span> <span class="o">:</span> <span class="nd">@within</span><span class="o">(</span><span class="n">Immutable</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">declare</span> <span class="n">error</span> <span class="o">:</span> <span class="n">mutators</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="n">immutable</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">testCase</span><span class="o">()</span> <span class="o">:</span> <span class="s">&quot;Immutable objects should not be mutated&quot;</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note that the example above doesn&#8217;t ensure that all members are themselves <code>Immutable</code> or that constructors / accessors against collections ensure immutability. It also doesn&#8217;t support junit tests that do not extend <code>TestCase</code>.</p>
+
+<h2>@Intermittent</h2>
+
+<p>The <code>Intermittent</code> annotation is fully documented in the <a href="concurrency.html#Intermittent_Tests">concurrency</a> section and offers a way to indicate tests intermittently fail. If you&#8217;re using JUnit, you can also re-run the tests several times using the <code>IntermittentTestRunner</code> classes.</p>
+
+<h2>@Not</h2>
+
+<p>The <code>Not</code> annotation can be used to explicitly document the intent to <em>not</em> another annotation. For example, to document that some class is not thread- safe and doesn&#8217;t and should not be immutable (ie, it&#8217;s intentionally mutable), you could write</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Not</span><span class="o">({</span><span class="n">ThreadSafe</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">Immutable</span><span class="o">.</span><span class="na">class</span><span class="o">})</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Yagni</span> <span class="o">{</span>
+</span><span class='line'>    <span class="c1">// ...</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can supply as many arguments as you like as long as they make sense to you.</p>
+
+<h2>@Repeating</h2>
+
+<p>The <code>Repeating</code> annotation is documented in the <a href="/documentation/junit/load">concurrency</a> section and offers a mechanism to repeatedly run a test method for load or soak test purposes. It can be combined with the <code>Concurrent</code> annotation to run test methods multiple times across multiple threads.</p>
+
+<h2>@Task</h2>
+
+<p>The <code>Task</code> annotation is intended to document that a class is a concurrent task. A vanilla <code>Runnable</code> or <code>Callable</code> implementation for example may be used to implement some general purpose piece of functionality. Often, these will represent small tasks to be executed in serial, by annotating it as a <em>task</em>, you convey that the intended usage is from a concurrent context. For example, the <code>Runnable</code> will be run in parallel with other tasks.</p>
+
+<blockquote><p>Most concurrent applications are organised around the execution of tasks: abstract, discrete units of work. Dividing the work of an application into tasks simplifies organisation, facilitates error recovering by providing natural transaction boundaries, and promotes concurrency by providing a natural structure for paralleslising work.</p><footer><strong>Goetz et al</strong> <cite>Concurrency in Practice</cite></footer></blockquote>
+
+
+<p>With this annotation, when we talk about <em>tasks</em> we really mean <em>concurrent tasks</em>.</p>
+
+<h2>@ThreadSafe</h2>
+
+<p>The <code>ThreadSafe</code> annotation is a direct implementation of the Goetz version. It is used to document that the author <em>thinks</em> a class is thread safe.</p>
+
+<h2>@GuardedBy</h2>
+
+<p>The <code>GaurdedBy</code> annotation is a variation on the Goetz version whereby the the lock and lock details are explicitly set as parameter types. See <a href="http://www.javaconcurrencyinpractice.com/"> Concurrency In Practice</a> for an in-depth description of it&#8217;s use.</p>
+
+<p>The enum <code>GuardedBy.Type</code> defines the following lock types based on the Goetz version.</p>
+
+<ul>
+<li><code>THIS</code></li>
+<li><code>INNER_CLASS_THIS</code></li>
+<li><code>ITSELF</code></li>
+<li><code>FIELD</code></li>
+<li><code>STATIC_FIELD</code></li>
+<li><code>METHOD</code></li>
+</ul>
+
+
+<h3>THIS</h3>
+
+<p>In the example below, shows how the <code>THIS</code> lock type is used. All access to the <code>bar</code> member is guarded by the instance monitor object off <code>Foo</code>.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Foo</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@GuardedBy</span><span class="o">(</span><span class="n">lock</span> <span class="o">=</span> <span class="n">THIS</span><span class="o">)</span> <span class="kd">private</span> <span class="kd">final</span> <span class="n">Bar</span> <span class="n">bar</span> <span class="o">=</span> <span class="o">...</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">raise</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">bar</span><span class="o">.</span><span class="na">raise</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">lower</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">synchronized</span><span class="o">(</span><span class="k">this</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">bar</span><span class="o">.</span><span class="na">lower</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>INNER_CLASS_THIS</h3>
+
+<p>The <code>INNER_CLASS_THIS</code> type is a way of disambiguating from <code>THIS</code> when it&#8217;s used from an inner class. However, it&#8217;s marked as deprecated as <code>THIS</code> can still be used and disambiguated by using the <code>details</code> parameter. For example,</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Foo</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@GuardedBy</span><span class="o">(</span><span class="n">lock</span> <span class="o">=</span> <span class="n">THIS</span><span class="o">,</span> <span class="n">details</span> <span class="o">=</span> <span class="s">&quot;Callable.class&quot;</span><span class="o">)</span> <span class="kd">private</span> <span class="kd">final</span> <span class="n">Bar</span> <span class="n">bar</span> <span class="o">=</span> <span class="o">...</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">raise</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">new</span> <span class="nf">Callable</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">call</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">bar</span><span class="o">.</span><span class="na">raise</span><span class="o">();</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">};</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>ITSELF</h3>
+
+<p>It may be necessary to indicate that another object is responsible for its own synchronisation policy. For example, when avoiding <code>ConcurrentModificationException</code> on summing a list of numbers below, we declare our <code>List</code> using <code>Collections.synchronizedList</code>. Internally, this thread-safe list uses itself to guard access, we reflect this using the annotation as below.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Foo</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@GuardedBy</span><span class="o">(</span><span class="n">lock</span> <span class="o">=</span> <span class="n">ITSELF</span><span class="o">)</span> <span class="kd">private</span> <span class="kd">final</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">numbers</span> <span class="o">=</span> <span class="n">Collections</span><span class="o">.</span><span class="na">synchronizedList</span><span class="o">(</span><span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">addNumber</span><span class="o">(</span><span class="kt">int</span> <span class="n">number</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">numbers</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">number</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">sum</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>        <span class="kd">synchronized</span><span class="o">(</span><span class="n">numbers</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">number</span> <span class="o">:</span> <span class="n">numbers</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">sum</span> <span class="o">+=</span> <span class="n">number</span><span class="o">;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">sum</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>FIELD and STATIC_FIELD</h3>
+
+<p>Using a field to synchronise access can be seen in the example below (based on an example from Goetz).</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">PrivateLock</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Object</span> <span class="n">myLock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Object</span><span class="o">();</span>
+</span><span class='line'>    <span class="nd">@GuardedBy</span><span class="o">(</span><span class="n">lock</span> <span class="o">=</span> <span class="n">FIELD</span><span class="o">,</span> <span class="n">details</span> <span class="o">=</span> <span class="s">&quot;myLock&quot;</span><span class="o">)</span> <span class="n">Widget</span> <span class="n">widget</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">void</span> <span class="nf">someMethod</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">synchronized</span> <span class="o">(</span><span class="n">myLock</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="c1">// Access or modify the state of widget</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>METHOD</h3>
+
+<p>When a lock is obtained via some method, the <code>METHOD</code> type along with a <code>details</code> can be used. A trivial example is shown below. We haven&#8217;t found much use for this type, but that&#8217;s not to say that you won&#8217;t</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Foo</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@GuardedBy</span><span class="o">(</span><span class="n">lock</span> <span class="o">=</span> <span class="n">METHOD</span><span class="o">,</span> <span class="n">details</span> <span class="o">=</span> <span class="s">&quot;getLock()&quot;</span><span class="o">)</span> <span class="kd">private</span> <span class="kd">final</span> <span class="n">Bar</span> <span class="n">bar</span> <span class="o">=</span> <span class="o">...</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">raise</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">synchronized</span><span class="o">(</span><span class="n">getLock</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">bar</span><span class="o">.</span><span class="na">raise</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">Object</span> <span class="nf">getLock</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// ...</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+  
+</article>
+
+</div>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2009-2012 - Toby Weston -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a>, theme by <a href="https://twitter.com/#!/alemelandri">@alemelandri</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

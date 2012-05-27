@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Testing | tempus-fugit]]></title>
+  <link href="http://tempusfugitlibrary.org/recipes/categories/testing/atom.xml" rel="self"/>
+  <link href="http://tempusfugitlibrary.org/"/>
+  <updated>2012-05-27T17:59:16+01:00</updated>
+  <id>http://tempusfugitlibrary.org/</id>
+  <author>
+    <name><![CDATA[Toby Weston]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Testing Concurrent Code]]></title>
+    <link href="http://tempusfugitlibrary.org/recipes/2012/05/20/testing-concurrent-code/"/>
+    <updated>2012-05-20T20:33:00+01:00</updated>
+    <id>http://tempusfugitlibrary.org/recipes/2012/05/20/testing-concurrent-code</id>
+    <content type="html"><![CDATA[<p>Testing concurrency can be hard. When you fire up threads from within a test, it's difficult not to introduce concurrency bugs in the test code and be sure you're actually exercising the code with the intended interleaving. There must be a better way...</p>
+
+<h2>Separate the Concurrency Policy from Behaviour</h2>
+
+<p><a href="http://www.growing-object-oriented-software.com/">GOOS</a> amongst other people recommend separating the concurrency policy from the parts of the system that are doing the work. So, for example, if you have some form of "executor" which is responsible for farming work out concurrently and behaviour defined separately, you can test each independently and just verify that they collaborate to achieve "worker" behaviour concurrently. Make sense?</p>
+
+<!-- more -->
+
+
+<p>As an example, <a href="https://github.com/tobyweston/tempus-fugit/blob/master/tempus-fugit/src/test/java/com/google/code/tempusfugit/concurrency/ConcurrentSchedulerTest.java">this test from tempus-fugit</a> demonstrates the idea. The <code>Scheduler</code>'s behaviour (which is essentially to "schedule" tasks) is independent from <em>how</em> it actually achieves this. In this case, it delegates to an <code>Executor</code> and so this doesn't need to be tested with any threads. It's a simple collaborator style test.</p>
+
+<p>Having said that, there may be times you actually want to run your class 'in context' in a multi-threaded way. The trick here is to keep the test deterministic. Well, I say that, there's a couple of choices...</p>
+
+<h2>Deterministic</h2>
+
+<p>If you can setup your test to progress in a deterministic way, waiting at key points for conditions to be met before moving forward, you can try to simulate a specific process interleaving to test. This means understanding exactly what you want to test (for example, forcing the code into a deadlock) and stepping through deterministically (for example, using abstractions like <code>CountdownLatche</code> to <em>synchronise</em> the moving parts).</p>
+
+<p>When you attempt to make some multi-threaded test syncrhonise its moving parts, you can use whatever concurrency abstraction is available to you but it's difficult because its concurrent; things could happen in an unexpected order. Often people try to mitigate this in tests by introducing <code>sleep</code> calls. We generally don't like to sleep in a test because it can introduce non-determinism. Just because the right sleep amount on one machine <em>usually</em> causes the affect you're looking for, it doesn't mean it'll be the same on the next machine. It'll also make the test run slower and when you've got thousands of tests to run, every ms counts. If you try and lower the sleep period, more non-determinism comes in. It's not pretty.</p>
+
+<p>Some examples of forcing specific interleaving include</p>
+
+<ul>
+<li><a href="https://github.com/tobyweston/tempus-fugit/blob/master/tempus-fugit/src/test/java/com/google/code/tempusfugit/concurrency/DeadlockDetectorTest.java">Forcing a deadlock</a> using <code>CountdownLatch</code></li>
+<li><a href="https://github.com/tobyweston/tempus-fugit/blob/master/tempus-fugit/src/test/java/com/google/code/tempusfugit/concurrency/ThreadUtilsTest.java">Setting up a thread to be interrupted</a></li>
+</ul>
+
+
+<p>Another gotcha is where the main test thread will finish before any newly spawned threads under test complete. This is an easy trap to fall into with UI testing. Waiting for a specific condition rather than allowing the test thread to finish often helps. For example using <a href="/documentation/time/waiting">WaitFor</a>. See the article <a href="http://baddotrobot.com/blog/2008/12/30/be-explicit-about-ui-thread-in-swt/">Be Explicit with the UI Thread</a> for more details around this for UI testing.</p>
+
+<h2>Soak / Load Testing</h2>
+
+<p>Another choice is to bombard your classes in an attempt to overload them and force them to betray some subtle concurrency issue. Here, just as in the other style, you'll need to setup up specific assertions so that you can tell if and when the classes betray themselves. Of course there is no guarantee that you'll simulate a problem, you might never see the unlike timing needed.</p>
+
+<p>The tempus-fugit library offers a declarative way to setup tests to run repeatedly and in parallel, see <a href="/documentation/junit/load">Load / Soak Tests</a>.</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Timeoutable Completion Service - tempus-fugit</title>
+  <meta name="author" content="Toby Weston">
+
+  
+  <meta name="description" content="Timeoutable Completion Service May 26th, 2012 The TimeoutableCompletionService interface describes a service similar to a java.util.concurrent. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://tempusfugitlibrary.org/documentation/concurrency/completion">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="tempus-fugit" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Averia+Libre:300' rel='stylesheet' type='text/css'>
+  
+
+</head>
+
+<body   class="no-sidebar"  >
+  <header role="banner"><hgroup>
+  <h1><a href="/">tempus-fugit</a></h1>
+  
+    <h2>Java micro-library for writing & testing concurrent code</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:tempusfugitlibrary.org" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+    <li><a href="/">Home</a></li>
+    <li><a href="/documentation/">Documentation</a></li>
+    <li><a href="/documentation/download">Download</a></li>
+    <li><a href="https://github.com/tobyweston/tempus-fugit">Source</a></li>
+    <li><a href="/recipes">Recipes</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article role="article">
+  
+  <header>
+    <h1 class="entry-title">Timeoutable Completion Service</h1>
+    <p class="meta">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-26T16:53:00+01:00" pubdate data-updated="true">May 26<span>th</span>, 2012</time></p>
+  </header>
+  
+  <p>The <code>TimeoutableCompletionService</code> interface describes a service similar to a <code>java.util.concurrent.CompletionService</code> except that it will timeout after a specified duration if all results haven&#8217;t yet been retrieved.</p>
+
+<p>The default implementation, <code>DefaultTimeoutableCompletionService</code>, delegates to an underlying <code>CompletionService</code> but will stop waiting for submitted tasks to complete after a given timeout.</p>
+
+<p>If the timeout expires before all tasks have been completed, the <code>DefaultTimeoutableCompletionService</code> will throw a <code>TimeoutException</code>. The exception thrown will also contain the results from any tasks that did manage to complete before the timeout. If all the submitted tasks complete before the timeout expires, the results are returned from the <code>submit</code> method and no exceptions are thrown.</p>
+
+<p>In the example below, we&#8217;d like to create a status monitoring application that will output the status of a set of probes to a web page. However, the web page must be loaded within a few seconds regardless of whether all the probes have returned their results. The completion service can be used to execute individual status probe tasks in parallel, timing out after some duration.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="n">DefaultTimeoutableCompletionService</span> <span class="n">completionService</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DefaultTimeoutableCompletionService</span><span class="o">(</span><span class="k">new</span> <span class="n">ExecutorCompletionService</span><span class="o">(...));</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">probe</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Callable</span><span class="o">&lt;</span><span class="n">Result</span><span class="o">&gt;&gt;</span> <span class="n">probes</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">List</span><span class="o">&lt;</span><span class="n">Result</span><span class="o">&gt;</span> <span class="n">results</span> <span class="o">=</span> <span class="n">completionService</span><span class="o">.</span><span class="na">submit</span><span class="o">(</span><span class="n">probes</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">write</span><span class="o">(</span><span class="n">results</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">TimeoutExceptionWithFutures</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">write</span><span class="o">(</span><span class="n">getResultsFrom</span><span class="o">(</span><span class="n">e</span><span class="o">));</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ExecutionException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here, the list of tasks to run in parallel is created by some factory class and assigned to the <code>probes</code> variable. These are just a list of <code>Callable</code> objects which will be executed by the underlying <code>Executor</code>, in our case, they&#8217;ll look up the status of some probe and return a <code>Result</code> object.</p>
+
+<p>The <code>DefaultTimeoutableCompletionService</code> is then used to schedule execution of the tasks with the <code>submit</code> method. At this point, the code will block and wait for all results to be returned or for the <code>TimeoutExceptionWithFutures</code> to be thrown. In the case of all tasks completing within the timeout, the results are just outputted using the <code>write</code> method.</p>
+
+<p>For the case where the completion service timed out, a <code>TimeoutException</code> is thrown which includes any completed results. The <code>write</code> method in this case can just extract the partial set of results from the exception.</p>
+
+<p>The default timeout for the service is thirty seconds but this can be changed using an alternative constructor.</p>
+
+<p><a href="/documentation/junit/">Next, JUnit Integration &raquo;</a></p>
+
+  
+</article>
+
+</div>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2009-2012 - Toby Weston -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a>, theme by <a href="https://twitter.com/#!/alemelandri">@alemelandri</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

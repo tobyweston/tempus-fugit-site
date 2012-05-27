@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Conditions - tempus-fugit</title>
+  <meta name="author" content="Toby Weston">
+
+  
+  <meta name="description" content="Conditions May 26th, 2012 Conditions are part of our everyday language. The Condition interface captures a conditional as something that can be &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://tempusfugitlibrary.org/documentation/time/conditions">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="tempus-fugit" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Averia+Libre:300' rel='stylesheet' type='text/css'>
+  
+
+</head>
+
+<body   class="no-sidebar"  >
+  <header role="banner"><hgroup>
+  <h1><a href="/">tempus-fugit</a></h1>
+  
+    <h2>Java micro-library for writing & testing concurrent code</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:tempusfugitlibrary.org" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+    <li><a href="/">Home</a></li>
+    <li><a href="/documentation/">Documentation</a></li>
+    <li><a href="/documentation/download">Download</a></li>
+    <li><a href="https://github.com/tobyweston/tempus-fugit">Source</a></li>
+    <li><a href="/recipes">Recipes</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article role="article">
+  
+  <header>
+    <h1 class="entry-title">Conditions</h1>
+    <p class="meta">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-26T17:45:00+01:00" pubdate data-updated="true">May 26<span>th</span>, 2012</time></p>
+  </header>
+  
+  <p>Conditions are part of our everyday language. The <code>Condition</code> interface captures a conditional as something that can be reused. For example, waiting for something can be achieved using the <code>WaitFor</code> (see <a href="/documentation/time/waiting">waiting</a>) class and an anonymous <code>Condition</code>. For example,</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="kt">void</span> <span class="nf">waitForShutdown</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">TimeoutException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">waitOrTimeout</span><span class="o">(</span><span class="k">new</span> <span class="n">Condition</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isSatisfied</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">server</span><span class="o">.</span><span class="na">isShutdown</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">},</span> <span class="n">timeout</span><span class="o">);</span>
+</span><span class='line'> <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>will wait for some <code>server</code> to indicate that it has shutdown. The <code>Conditions</code> class collects useful <code>Condition</code> objects such as <code>not</code>. There is also a useful <code>Condition</code> to indicate if a thread is in a waiting state in <code>ThreadUtils</code>.</p>
+
+<p>Some common thread related conditions have been collected in the <code>Conditions</code> class. These include a <em>not</em> condition to invert the result of some other condition and various thread state related conditions such as checking if a a thread alive. See the <a href="/documentation/threading/misc">miscellaneous thread utils</a> section for details.</p>
+
+<p>For testing purposes, you might want to assert against the outcome of a <code>Condition</code>. The <code>Conditions</code> class has an <code>assertThat</code> method which takes a <code>Matcher&lt;Boolean&gt;</code> for use with JUnit. For example, you could assert against a condition using vanilla JUnit like this.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Assert</span><span class="o">.</span><span class="na">assertThat</span><span class="o">(</span><span class="n">not</span><span class="o">(</span><span class="n">TRUE</span><span class="o">).</span><span class="na">isSatisfied</span><span class="o">(),</span> <span class="n">is</span><span class="o">(</span><span class="kc">false</span><span class="o">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>or using the <code>Conditions</code> class, you can tidy the assert up to look like this.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Conditions</span><span class="o">.</span><span class="na">assertThat</span><span class="o">(</span><span class="n">not</span><span class="o">(</span><span class="n">TRUE</span><span class="o">),</span> <span class="n">is</span><span class="o">(</span><span class="kc">false</span><span class="o">));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you have <code>Matcher</code>s available in your production code, you can use this with flexible waits, for example,</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">WaitFor</span><span class="o">.</span><span class="na">waitOrTimeout</span><span class="o">(</span><span class="n">Conditions</span><span class="o">.</span><span class="na">assertion</span><span class="o">(</span><span class="s">&quot;hello&quot;</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="n">not</span><span class="o">(</span><span class="n">equalTo</span><span class="o">(</span><span class="s">&quot;goodbye&quot;</span><span class="o">)))),</span> <span class="n">timeout</span><span class="o">(</span><span class="n">millis</span><span class="o">(</span><span class="mi">100</span><span class="o">)));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><a href="/documentation/time/waiting">Next, Testing Time Sensitive Code: Waiting For Conditions &raquo;</a></p>
+
+  
+</article>
+
+</div>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2009-2012 - Toby Weston -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a>, theme by <a href="https://twitter.com/#!/alemelandri">@alemelandri</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

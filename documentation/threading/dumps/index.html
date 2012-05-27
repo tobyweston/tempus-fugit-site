@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>tempus-fugit</title>
+  <title>Thread Dumps - tempus-fugit</title>
   <meta name="author" content="Toby Weston">
 
   
-  <meta name="description" content="The tempus-fugit library helps you write and test concurrent code. It helps you&#8230; Write cleaner concurrent code with less boiler plate code &hellip;">
+  <meta name="description" content="Thread Dumps May 25th, 2012 The ThreadDump class offers a programmatic way to print a thread dump. It&#8217;s not recommended for production code &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://tempusfugitlibrary.org">
+  <link rel="canonical" href="http://tempusfugitlibrary.org/documentation/threading/dumps">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -34,7 +34,7 @@
 
 </head>
 
-<body   >
+<body   class="no-sidebar"  >
   <header role="banner"><hgroup>
   <h1><a href="/">tempus-fugit</a></h1>
   
@@ -69,77 +69,55 @@
       <div>
 <article role="article">
   
-  <p>The tempus-fugit library helps you write and test concurrent code.</p>
-
-<h2>It helps you&#8230;</h2>
-
-<ul>
-<li>Write cleaner concurrent code with less boiler plate code</li>
-<li>Introduce determinism back into your concurrent tests</li>
-<li>Leverage your synergies and generally be awesome</li>
-</ul>
+  <header>
+    <h1 class="entry-title">Thread Dumps</h1>
+    <p class="meta">
 
 
-<h2>Ready to Get Started?</h2>
 
-<p>Just download from Maven, look through the <a href="/documentation">documentation</a> or browse the <a href="/recipes/archives">recipes archive</a> for tips.</p>
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-25T19:43:00+01:00" pubdate data-updated="true">May 25<span>th</span>, 2012</time></p>
+  </header>
+  
+  <p>The <code>ThreadDump</code> class offers a programmatic way to print a thread dump. It&#8217;s not recommended for production code but can be handy in tracking down unexpected behaviour interactively. Using <code>ThreadDump.dumpThreads(System.out)</code>, for example, would yield something like the following (formatting inspired by <code>jstack</code>).</p>
+
+<pre><code> Thread Reference Handler@2: (state = WAITING)
+ - java.lang.Object.wait(Native Method)
+ - java.lang.Object.wait(Object.java:474)
+ - java.lang.ref.Reference$ReferenceHandler.run(Reference.java:116)
+
+Thread main@1: (state = RUNNABLE)
+ - java.lang.Thread.dumpThreads(Native Method)
+ - java.lang.Thread.getAllStackTraces(Thread.java:1460)
+ - com.google.code.tempusfugit.concurrency.ThreadDump.dumpThreads(ThreadDump.java:25)
+  ...
+ - com.intellij.rt.execution.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:118)
+ - com.intellij.rt.execution.junit.JUnitStarter.main(JUnitStarter.java:40)
+
+Thread Signal Dispatcher@4: (state = RUNNABLE)
+
+Thread Finalizer@3: (state = WAITING)
+ - java.lang.Object.wait(Native Method)
+ - java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:120)
+ - java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:136)
+ - java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:159)
+</code></pre>
+
+<p>The <code>dumpThreads</code> method will also detect any Java-level deadlocks, see the next section for details.</p>
+
+<p><a href="/documentation/threading/deadlock">Next, Thread Utilities: Deadlock Detection &raquo;</a></p>
 
   
 </article>
 
 </div>
-
-<aside class="sidebar">
-  
-    <section>
-    <h1>Recent Recipes</h1>
-    <ul id="recent_posts">
-        
-        <li class="post">
-            <a href="/recipes/2012/05/26/detecting-deadlocks/">Detecting Deadlocks</a>
-        </li>
-        
-        <li class="post">
-            <a href="/recipes/2012/05/20/testing-concurrent-code/">Testing Concurrent Code</a>
-        </li>
-        
-    </ul>
-    <p><a href="/recipes/archives">Recipe Archive</a></p>
-</section>
-
-<section>
-    </br>
-    </br>
-    <blockquote>
-        <p>
-            "We always strain at the limits of our ability to comprehend the artifacts we construct -- that's true for software and for skyscrapers."
-        </p>
-        <footer>
-            <strong>James Gosling</strong>
-            <cite>
-                <a href="http://www.softwarequotes.com/showquotes.aspx?id=709&name=James%20Gosling">www.softwarequotes.com</a>
-            </cite>
-        </footer>
-    </blockquote>
-</section>
-
-
-
-<section class="googleplus googleplus-hidden">
-  <h1>
-    <a href="https://plus.google.com/116267404189265967722?rel=author">
-      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
-      Google+
-    </a>
-  </h1>
-</section>
-
-
-
-    
-
-  
-</aside>
 
 
     </div>

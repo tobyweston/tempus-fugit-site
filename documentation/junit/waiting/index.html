@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Waiting for Assertions - tempus-fugit</title>
+  <meta name="author" content="Toby Weston">
+
+  
+  <meta name="description" content="Waiting for Assertions May 26th, 2012 The WaitFor class can be used to wait for a condition to hold. You can use it within your tests to wait for &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://tempusfugitlibrary.org/documentation/junit/waiting">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="tempus-fugit" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Averia+Libre:300' rel='stylesheet' type='text/css'>
+  
+
+</head>
+
+<body   class="no-sidebar"  >
+  <header role="banner"><hgroup>
+  <h1><a href="/">tempus-fugit</a></h1>
+  
+    <h2>Java micro-library for writing & testing concurrent code</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:tempusfugitlibrary.org" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+    <li><a href="/">Home</a></li>
+    <li><a href="/documentation/">Documentation</a></li>
+    <li><a href="/documentation/download">Download</a></li>
+    <li><a href="https://github.com/tobyweston/tempus-fugit">Source</a></li>
+    <li><a href="/recipes">Recipes</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article role="article">
+  
+  <header>
+    <h1 class="entry-title">Waiting for Assertions</h1>
+    <p class="meta">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-26T17:16:00+01:00" pubdate data-updated="true">May 26<span>th</span>, 2012</time></p>
+  </header>
+  
+  <p>The <code>WaitFor</code> class can be used to wait for a condition to hold. You can use it within your tests to wait for some asynchronous process to complete and so make an assertion in a test.</p>
+
+<p>In the example below, a test verifies that the action of clicking a button will toggle some switch to a different position. However, this test may or may not pass if the <code>clickButton()</code> kicks off an asynchronous process to update the toggle position. It may return immediately having not yet changed the position.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Test</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">toggleButton</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">toggle</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="n">ON</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">clickButton</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">toggle</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="n">OFF</span><span class="o">));</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Rewriting the test using a <code>WaitFor</code> would look like this</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Test</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">toggleButton</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">TimeoutException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">toggle</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="n">ON</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">clickButton</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">waitOrTimeout</span><span class="o">(</span><span class="k">new</span> <span class="n">Condition</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isSatisfied</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">toggle</span> <span class="o">==</span> <span class="n">OFF</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">},</span> <span class="n">seconds</span><span class="o">(</span><span class="mi">5</span><span class="o">));</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here, the test will retry the <code>Condition</code> for five seconds before finally giving up and failing the test. If the condition is true immediately, the wait will continue immediately and the test will continue. By extracting a method to create the <code>Condition</code>, you can further refactor the test to be more expressive and start to create a library of reusable conditions.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Test</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">toggleButton</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">TimeoutException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">toggle</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="n">ON</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">clickButton</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">waitOrTimeout</span><span class="o">(</span><span class="n">toggleIs</span><span class="o">(</span><span class="n">OFF</span><span class="o">),</span> <span class="n">seconds</span><span class="o">(</span><span class="mi">5</span><span class="o">));</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">Condition</span> <span class="nf">toggleIs</span><span class="o">(</span><span class="kd">final</span> <span class="n">Position</span> <span class="n">position</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="nf">Condition</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isSatisfied</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">toggle</span> <span class="o">==</span> <span class="n">position</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">};</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>A wait which times out will through a <code>TimeoutException</code> although, since 1.2, you can also supply the <code>waitOrTimeout</code> call with behaviour to execute on timeout (as a <code>Callable</code>). For example;</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">waitOrTimeout</span><span class="o">(</span><span class="n">serverIsShutdown</span><span class="o">(),</span> <span class="k">new</span> <span class="n">Callable</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">,</span> <span class="n">RuntimeException</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Void</span> <span class="nf">call</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">RuntimeException</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">notifyObservers</span><span class="o">(</span><span class="k">new</span> <span class="n">FailedToShutdownEvent</span><span class="o">());</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">},</span> <span class="n">timeout</span><span class="o">(</span><span class="n">millis</span><span class="o">(</span><span class="mi">500</span><span class="o">)));</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>will not throw a <code>TimeoutException</code> but instead notify some observer of the failure. Refactored a little, it would look like this</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">waitOrTimeout</span><span class="o">(</span><span class="n">serverIsShutdown</span><span class="o">(),</span> <span class="n">notifyFailureOnTimeout</span><span class="o">(),</span> <span class="n">timeout</span><span class="o">(</span><span class="n">millis</span><span class="o">(</span><span class="mi">500</span><span class="o">)));</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">Callable</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">,</span> <span class="n">RuntimeException</span><span class="o">&gt;</span> <span class="n">notifyFailureOnTimeout</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="n">Callable</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">,</span> <span class="n">RuntimeException</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="n">Void</span> <span class="nf">call</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">RuntimeException</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">notifyObservers</span><span class="o">(</span><span class="k">new</span> <span class="n">FailedToShutdownEvent</span><span class="o">());</span>
+</span><span class='line'>            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><a href="/documentation/junit/interrupt/">Next, JUnit Integration: Testing Interrupts &raquo;</a></p>
+
+  
+</article>
+
+</div>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2009-2012 - Toby Weston -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a>, theme by <a href="https://twitter.com/#!/alemelandri">@alemelandri</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
