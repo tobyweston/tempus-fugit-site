@@ -18,7 +18,7 @@ The `DeadlockDecector` class will spot Java monitor cyclic locking problems as w
 
 <!-- more -->
 
-## Monitor Deadlock
+## Monitor Deadlock Example
 
 {% codeblock lang:java %}
 @Test
@@ -65,9 +65,9 @@ Here, the Kidnapper is unwilling to release poor Nibbles the Cat until he has th
       which is held by "Negotiator-Thread-1"
 
 
-[See this example in full](https://github.com/tobyweston/tempus-fugit/blob/master/src/test/java/com/google/code/tempusfugit/concurrency/DeadlockDetectorTest.java).
+[See this example in full](https://github.com/tobyweston/tempus-fugit/blob/master/src/test/java/com/google/code/tempusfugit/concurrency/DeadlockDetectorTest.java)
 
-## Lock Deadlock
+## Lock Based Deadlock Example
 
 {% codeblock lang:java %}
 private final Cash cash = ... // Cash extends ReentrantLock
@@ -133,4 +133,4 @@ Same scenario as before, a deadlock ensues which is shown as.
       which is held by "Negotiator-Thread-3"
 
 
-[See this example in full](https://github.com/tobyweston/tempus-fugit/blob/master/src/test/java/com/google/code/tempusfugit/concurrency/DeadlockDetectorWithLocksTest.java).
+[See this example in full](https://github.com/tobyweston/tempus-fugit/blob/master/src/test/java/com/google/code/tempusfugit/concurrency/DeadlockDetectorWithLocksTest.java)
