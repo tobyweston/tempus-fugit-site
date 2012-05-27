@@ -102,7 +102,7 @@ public class Negotiator extends Thread {
 }
 {% endcodeblock %}
 
-Where `keep` and `take` methods are pedagogically named methods wrapping the `Lock.lock` and `Lock.unlock` methods.
+Where `keep`, `take` and `release` methods are pedagogically named methods wrapping the `Lock.lock` and `Lock.unlock` methods.
 
 {% codeblock lang:java %}
 private void keep(Lock lock) {
