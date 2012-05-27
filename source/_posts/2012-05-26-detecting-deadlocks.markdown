@@ -53,18 +53,84 @@ Here, the Kidnapper is unwilling to release poor Nibbles the Cat until he has th
 
 
 
-     Deadlock detected
-     =================
+    Deadlock detected
+    =================
 
-     "Negotiator-Thread-1":
-        waiting to lock Monitor of ...DeadlockDetectorTest$Cat@ce4a8a
-        which is held by "Kidnapper-Thread-0"
+    "Negotiator-Thread-1":
+      waiting to lock Monitor of ...DeadlockDetectorTest$Cat@ce4a8a
+      which is held by "Kidnapper-Thread-0"
 
-     "Kidnapper-Thread-0":
-        waiting to lock Monitor of ...DeadlockDetectorTest$Cash@7fc8b2
-        which is held by "Negotiator-Thread-1"
+    "Kidnapper-Thread-0":
+      waiting to lock Monitor of ...DeadlockDetectorTest$Cash@7fc8b2
+      which is held by "Negotiator-Thread-1"
 
 
+[See this example in full](https://github.com/tobyweston/tempus-fugit/blob/master/src/test/java/com/google/code/tempusfugit/concurrency/DeadlockDetectorTest.java).
 
 ## Lock Deadlock
 
+{% codeblock lang:java %}
+private final Cash cash = ... // Cash extends ReentrantLock
+private final Cat = ... // Cat extends ReentrantLock
+
+@Test
+public void potentialDeadlock() throws InterruptedException {
+    new Kidnapper().start();
+    new Negotiator().start();
+}
+
+public class Kidnapper extends Thread {
+    public void run() {
+        try {
+            keep(nibbles);
+            take(cash);
+        } finally {
+            release(nibbles);
+        }
+    }
+}
+
+public class Negotiator extends Thread {
+    public void run() {
+        try {
+            keep(cash);
+            take(nibbles);
+        } finally {
+            release(cash);
+        }
+    }
+}
+{% endcodeblock %}
+
+Where `keep` and `take` methods are pedagogically named methods wrapping the `Lock.lock` and `Lock.unlock` methods.
+
+{% codeblock lang:java %}
+private void keep(Lock lock) {
+    lock.lock();
+}
+
+private void take(Lock lock) {
+    lock.lock();
+}
+
+private void release(Lock lock) {
+    lock.unlock();
+}
+{% endcodeblock %}
+
+
+Same scenario as before, a deadlock ensues which is shown as.
+
+    Deadlock detected
+    =================
+
+    "Negotiator-Thread-3":
+      waiting to lock Monitor of java.util.concurrent.locks.ReentrantLock$NonfairSync@266bade9
+      which is held by "Kidnapper-Thread-2"
+
+    "Kidnapper-Thread-2":
+      waiting to lock Monitor of java.util.concurrent.locks.ReentrantLock$NonfairSync@6766afb3
+      which is held by "Negotiator-Thread-3"
+
+
+[See this example in full](https://github.com/tobyweston/tempus-fugit/blob/master/src/test/java/com/google/code/tempusfugit/concurrency/DeadlockDetectorWithLocksTest.java).
