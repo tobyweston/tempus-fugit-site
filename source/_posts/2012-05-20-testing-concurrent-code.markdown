@@ -7,9 +7,11 @@ sidebar : false
 categories: [Testing, Concurrency]
 ---
 
+Testing concurrency can be hard. When you fire up threads from within a test, it's difficult not to introduce concurrency bugs in the test code and be sure you're actually exercising the code with the intended interleaving. There must be a better way...
+
 ## Separate the Concurrency Policy from Behaviour
 
-Testing stuff concurrently is hard. [GOOS](http://www.growing-object-oriented-software.com/) amongst other people recommend separating the concurrency policy from the parts of the system that are doing the work. So, for example, if you have some form of "executor" which is responsible for farming work out concurrently and behaviour defined separately, you can test each independently and just verify that they collaborate to achieve "worker" behaviour concurrently. Make sense?
+[GOOS](http://www.growing-object-oriented-software.com/) amongst other people recommend separating the concurrency policy from the parts of the system that are doing the work. So, for example, if you have some form of "executor" which is responsible for farming work out concurrently and behaviour defined separately, you can test each independently and just verify that they collaborate to achieve "worker" behaviour concurrently. Make sense?
 
 <!-- more -->
 
@@ -36,5 +38,5 @@ Another gotcha is where the main test thread will finish before any newly spawne
 
 Another choice is to bombard your classes in an attempt to overload them and force them to betray some subtle concurrency issue. Here, just as in the other style, you'll need to setup up specific assertions so that you can tell if and when the classes betray themselves. Of course there is no guarantee that you'll simulate a problem, you might never see the unlike timing needed.
 
-tempus-fugit offer a declarative way to setup tests to run repeatedly and in parallel, see [Load / Soak Tests](/documentation/junit/load).
+The tempus-fugit library offers a declarative way to setup tests to run repeatedly and in parallel, see [Load / Soak Tests](/documentation/junit/load).
 
