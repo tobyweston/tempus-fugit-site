@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Callable with Exception Generics - tempus-fugit</title>
+  <title>Exclude from Analytics - tempus-fugit</title>
   <meta name="author" content="Toby Weston">
 
   
-  <meta name="description" content="Callable With Exception Generics May 26th, 2012 The tempus-fugit Callable interface extends java.util.concurrent.Callable but allows you to specify &hellip;">
+  <meta name="description" content="No more Cookies You have been excluded from Google Analytics. var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-3327317-3']); _gaq.push([' &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://tempusfugitlibrary.org/documentation/callables/custom">
+  <link rel="canonical" href="http://tempusfugitlibrary.org/excludeme">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -46,7 +46,7 @@
 
 </head>
 
-<body   class="no-sidebar"  >
+<body   >
   <header role="banner"><hgroup>
   <h1><a href="/">tempus-fugit</a></h1>
   
@@ -78,55 +78,33 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div>
-<article role="article">
-  
-  <header>
-    <h1 class="entry-title">Callable With Exception Generics</h1>
-    <p class="meta">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-26T17:27:00+01:00" pubdate data-updated="true">May 26<span>th</span>, 2012</time></p>
-  </header>
-  
-  <p>The tempus-fugit <code>Callable</code> interface extends <code>java.util.concurrent.Callable</code> but allows you to specify the exception as a generic type. This class has a fairly limited usage and isn&#8217;t recommended over the standard Java version. Instead, if you create a method that takes a <code>java.util.concurrent.Callable</code> as a argument, calling it will force the method to throw <code>Exception</code>. If instead, you pass in a <code>com.google.code.tempusfugit.concurrency.Callable</code>, you can specify the specific exception to throw and therefore avoid being forced to throw <code>Exception</code>. For example</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">foo</span><span class="o">(</span><span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">concurrent</span><span class="o">.</span><span class="na">Callable</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">callable</span><span class="o">)</span> <span class="kd">throws</span> <span class="o">**</span><span class="n">Exception</span><span class="o">**</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">callable</span><span class="o">.</span><span class="na">call</span><span class="o">();</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Whereas using the tempus-fugit version allows a more specific exception to be thrown.</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">bar</span><span class="o">(</span><span class="n">com</span><span class="o">.</span><span class="na">google</span><span class="o">.</span><span class="na">code</span><span class="o">.</span><span class="na">tempusfugit</span><span class="o">.</span><span class="na">concurrency</span><span class="o">.</span><span class="na">Callable</span><span class="o">&lt;</span><span class="n">T</span><span class="o">,</span> <span class="n">RuntimeException</span><span class="o">&gt;</span> <span class="n">callable</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">callable</span><span class="o">.</span><span class="na">call</span><span class="o">();</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><a href="/documentation/time/">Next, Testing Time Sensitive Code &raquo;</a></p>
-
-  
-</article>
-
+      <body>
+<div id="main">
+    <div id="content">
+        <div>
+            <article role="article">
+                <h2>No more Cookies</h2>
+                <p>You have been excluded from Google Analytics.</p>
+            </article>
+        </div>
+    </div>
 </div>
+</body>
 
+<script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-3327317-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function () {
+        var ga = document.createElement('script');
+        ga.type = 'text/javascript';
+        ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(ga, s);
+    })();
+</script>
 
     </div>
   </div>
@@ -137,6 +115,19 @@
 
 </footer>
   
+
+<script type="text/javascript">
+      var disqus_shortname = 'tempus-fugit-library';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
 
 
 
