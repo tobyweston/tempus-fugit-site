@@ -6,4 +6,6 @@
 * SHow how to get concurrent modification exception and old school way to avoid it
 * SHow how to get concurrent modification exception and old school way to avoid it
 * Resetting the interrupt flag
+* wait/notify vs conditions (await/signal)
+* appendix from conconc RE thread life cycle
 * Co-routines?
