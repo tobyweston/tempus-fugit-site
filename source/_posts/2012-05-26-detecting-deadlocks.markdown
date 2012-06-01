@@ -65,7 +65,7 @@ Here, the Kidnapper is unwilling to release poor Nibbles the Cat until he has th
       which is held by "Negotiator-Thread-1"
 
 
-[See this example in full](https://github.com/tobyweston/tempus-fugit/blob/master/src/test/java/com/google/code/tempusfugit/concurrency/DeadlockDetectorTest.java)
+[See this example in full](https://github.com/tobyweston/tempus-fugit/blob/0036345f047fb26b9ca20690895d458cc0c2e104/src/test/java/com/google/code/tempusfugit/concurrency/DeadlockDetectorTest.java)
 
 ## Lock Based Deadlock Example
 
@@ -133,4 +133,4 @@ Same scenario as before, a deadlock ensues which is shown as.
       which is held by "Negotiator-Thread-3"
 
 
-[See this example in full](https://github.com/tobyweston/tempus-fugit/blob/master/src/test/java/com/google/code/tempusfugit/concurrency/DeadlockDetectorWithLocksTest.java)
+[See this example in full](https://github.com/tobyweston/tempus-fugit/blob/728f90331f7281b2b2a7268ba58cdebbfdff3793/src/test/java/com/google/code/tempusfugit/concurrency/DeadlockDetectorWithLocksTest.java)
