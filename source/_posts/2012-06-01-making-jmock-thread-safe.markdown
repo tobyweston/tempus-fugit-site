@@ -2,7 +2,7 @@
 layout: post
 title: "Make JMock Thread Safe"
 date: 2012-06-01 19:00
-categories: [Concurrency]
+categories: [Concurrency, Mocking]
 comments: true
 sidebar : false
 ---
