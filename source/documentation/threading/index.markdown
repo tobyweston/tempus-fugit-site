@@ -12,7 +12,7 @@ categories: [Thread Utilities]
 * [Sleeping and Interruptions](/documentation/threading/sleeping)
 * [Scheduled Interruption (Wake a Sleeping Thread)](/documentation/threading/wakeup)
 * [Thread Dumps](/documentation/threading/dumps)
-* [Deadlock Detection](/documentation/threading/deadlocks)
+* [Deadlock Detection](/documentation/threading/deadlock)
 * [Thread Conditions](/documentation/threading/conditions)
 * [Miscellaneous](/documentation/threading/misc)
 
