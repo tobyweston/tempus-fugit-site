@@ -121,7 +121,7 @@
 
 <h2>Deterministic</h2>
 
-<p>If you can setup your test to progress in a deterministic way, waiting at key points for conditions to be met before moving forward, you can try to simulate a specific process interleaving to test. This means understanding exactly what you want to test (for example, forcing the code into a deadlock) and stepping through deterministically (for example, using abstractions like <code>CountdownLatche</code> to <em>synchronise</em> the moving parts).</p>
+<p>If you can setup your test to progress in a deterministic way, waiting at key points for conditions to be met before moving forward, you can try to simulate a specific process interleaving to test. This means understanding exactly what you want to test (for example, forcing the code into a deadlock) and stepping through deterministically (for example, using abstractions like <code>CountdownLatch</code> to <em>synchronise</em> the moving parts).</p>
 
 <p>When you attempt to make some multi-threaded test syncrhonise its moving parts, you can use whatever concurrency abstraction is available to you but it&#8217;s difficult because its concurrent; things could happen in an unexpected order. Often people try to mitigate this in tests by introducing <code>sleep</code> calls. We generally don&#8217;t like to sleep in a test because it can introduce non-determinism. Just because the right sleep amount on one machine <em>usually</em> causes the affect you&#8217;re looking for, it doesn&#8217;t mean it&#8217;ll be the same on the next machine. It&#8217;ll also make the test run slower and when you&#8217;ve got thousands of tests to run, every ms counts. If you try and lower the sleep period, more non-determinism comes in. It&#8217;s not pretty.</p>
 

@@ -102,7 +102,7 @@
 
 <p><code>Conditions.isWaiting(Thread thread)</code></p>
 
-<p>A Condition that allows you to test if a thread is in a waiting state. Combining the condition with some classes from the <a href="time.html#Conditions_and_Waiting">temporal</a> package allows you to wait for a thread to be in the waiting state. For example,</p>
+<p>A Condition that allows you to test if a thread is in a waiting state. For example,</p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">waitOrTimeout</span><span class="o">(</span><span class="n">isWaiting</span><span class="o">(</span><span class="n">thread</span><span class="o">),</span> <span class="n">timeout</span><span class="o">(</span><span class="n">seconds</span><span class="o">(</span><span class="mi">10</span><span class="o">)));</span>

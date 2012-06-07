@@ -128,7 +128,7 @@ try { Thread.sleep(100);
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>This ensures that the interrupt flag is reset and is more explicit about the <a href="time.html#Duration">duration</a> of the sleep.</p>
+<p>This ensures that the interrupt flag is reset and is more explicit about the <a href="/../../time/durations/">duration</a> of the sleep.</p>
 
 <p>If you want to ensure the interrupt flag is reset for other code, you can use the <code>ThreadUtils.resetInterruptFlagWhen</code> method directly. The <code>Interruptible</code> interface is used to highlight that the lamda-like call you want to execute does in fact throw the <code>InterruptedException</code>. For example;</p>
 
