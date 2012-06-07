@@ -21,7 +21,7 @@ Having said that, there may be times you actually want to run your class 'in con
 
 ## Deterministic
 
-If you can setup your test to progress in a deterministic way, waiting at key points for conditions to be met before moving forward, you can try to simulate a specific process interleaving to test. This means understanding exactly what you want to test (for example, forcing the code into a deadlock) and stepping through deterministically (for example, using abstractions like `CountdownLatche` to *synchronise* the moving parts).
+If you can setup your test to progress in a deterministic way, waiting at key points for conditions to be met before moving forward, you can try to simulate a specific process interleaving to test. This means understanding exactly what you want to test (for example, forcing the code into a deadlock) and stepping through deterministically (for example, using abstractions like `CountdownLatch` to *synchronise* the moving parts).
 
 When you attempt to make some multi-threaded test syncrhonise its moving parts, you can use whatever concurrency abstraction is available to you but it's difficult because its concurrent; things could happen in an unexpected order. Often people try to mitigate this in tests by introducing `sleep` calls. We generally don't like to sleep in a test because it can introduce non-determinism. Just because the right sleep amount on one machine *usually* causes the affect you're looking for, it doesn't mean it'll be the same on the next machine. It'll also make the test run slower and when you've got thousands of tests to run, every ms counts. If you try and lower the sleep period, more non-determinism comes in. It's not pretty.
 
