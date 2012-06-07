@@ -9,6 +9,6 @@ categories: [Callables]
 
 ## Callables
 
-* [Convert Callable to Runnable](documentation/callables/convert)
-* [Callable with Exception Generics](documentation/callables/custom)
+* [Convert Callable to Runnable](/documentation/callables/convert)
+* [Callable with Exception Generics](/documentation/callables/custom)
 

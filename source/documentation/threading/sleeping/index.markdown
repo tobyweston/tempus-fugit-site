@@ -29,7 +29,7 @@ sleep(millis(100));
 {% endcodeblock %}
 
 
-This ensures that the interrupt flag is reset and is more explicit about the [duration](time.html#Duration) of the sleep.
+This ensures that the interrupt flag is reset and is more explicit about the [duration](/../../time/durations/) of the sleep.
 
 If you want to ensure the interrupt flag is reset for other code, you can use the `ThreadUtils.resetInterruptFlagWhen` method directly. The `Interruptible` interface is used to highlight that the lamda-like call you want to execute does in fact throw the `InterruptedException`. For example;
 

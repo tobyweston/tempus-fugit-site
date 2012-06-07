@@ -10,7 +10,7 @@ categories: documentation
 ## JUnit Integration
 
 * [Intermittent Tests](/documentation/junit/intermittent)
-* [Running Tests in Parallel](documentation/junit/parellel)
-* [Load / Soak Tests](documentation/junit/load)
-* [Waiting for Assertions](documentation/junit/waiting)
-* [Testing Interrupts](documentation/junit/interrupt)
+* [Running Tests in Parallel](/documentation/junit/parallel)
+* [Load / Soak Tests](/documentation/junit/load)
+* [Waiting for Assertions](/documentation/junit/waiting)
+* [Testing Interrupts](/documentation/junit/interrupt)

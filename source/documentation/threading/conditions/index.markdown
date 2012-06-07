@@ -13,7 +13,7 @@ categories: [Thread Utilities]
 
 `Conditions.isWaiting(Thread thread)`
 
-A Condition that allows you to test if a thread is in a waiting state. Combining the condition with some classes from the [temporal](time.html#Conditions_and_Waiting) package allows you to wait for a thread to be in the waiting state. For example,
+A Condition that allows you to test if a thread is in a waiting state. For example,
 
 
 {% codeblock lang:java %}
