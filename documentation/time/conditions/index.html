@@ -9,7 +9,7 @@
   <meta name="author" content="Toby Weston">
 
   
-  <meta name="description" content="Conditions May 26th, 2012 Conditions are part of our everyday language. The Condition interface captures a conditional as something that can be &hellip;">
+  <meta name="description" content="Conditions Conditions are part of our everyday language. The Condition interface captures a conditional as something that can be reused. For example &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,12 +95,12 @@
   
 
 
-<time datetime="2012-05-26T17:45:00+01:00" pubdate data-updated="true">May 26<span>th</span>, 2012</time></p>
+<time datetime="2012-05-26T17:45:00+01:00" pubdate data-updated="true"></time></p>
   </header>
   
   <p>Conditions are part of our everyday language. The <code>Condition</code> interface captures a conditional as something that can be reused. For example, waiting for something can be achieved using the <code>WaitFor</code> (see <a href="/documentation/time/waiting">waiting</a>) class and an anonymous <code>Condition</code>. For example,</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -114,7 +114,7 @@
 </span><span class='line'>        <span class="o">}</span>
 </span><span class='line'>    <span class="o">},</span> <span class="n">timeout</span><span class="o">);</span>
 </span><span class='line'> <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>will wait for some <code>server</code> to indicate that it has shutdown. The <code>Conditions</code> class collects useful <code>Condition</code> objects such as <code>not</code>. There is also a useful <code>Condition</code> to indicate if a thread is in a waiting state in <code>ThreadUtils</code>.</p>
@@ -123,23 +123,23 @@
 
 <p>For testing purposes, you might want to assert against the outcome of a <code>Condition</code>. The <code>Conditions</code> class has an <code>assertThat</code> method which takes a <code>Matcher&lt;Boolean&gt;</code> for use with JUnit. For example, you could assert against a condition using vanilla JUnit like this.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Assert</span><span class="o">.</span><span class="na">assertThat</span><span class="o">(</span><span class="n">not</span><span class="o">(</span><span class="n">TRUE</span><span class="o">).</span><span class="na">isSatisfied</span><span class="o">(),</span> <span class="n">is</span><span class="o">(</span><span class="kc">false</span><span class="o">));</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>or using the <code>Conditions</code> class, you can tidy the assert up to look like this.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Conditions</span><span class="o">.</span><span class="na">assertThat</span><span class="o">(</span><span class="n">not</span><span class="o">(</span><span class="n">TRUE</span><span class="o">),</span> <span class="n">is</span><span class="o">(</span><span class="kc">false</span><span class="o">));</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>If you have <code>Matcher</code>s available in your production code, you can use this with flexible waits, for example,</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">WaitFor</span><span class="o">.</span><span class="na">waitOrTimeout</span><span class="o">(</span><span class="n">Conditions</span><span class="o">.</span><span class="na">assertion</span><span class="o">(</span><span class="s">&quot;hello&quot;</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="n">not</span><span class="o">(</span><span class="n">equalTo</span><span class="o">(</span><span class="s">&quot;goodbye&quot;</span><span class="o">)))),</span> <span class="n">timeout</span><span class="o">(</span><span class="n">millis</span><span class="o">(</span><span class="mi">100</span><span class="o">)));</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p><a href="/documentation/time/waiting">Next, Testing Time Sensitive Code: Waiting For Conditions &raquo;</a></p>

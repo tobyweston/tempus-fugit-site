@@ -9,7 +9,7 @@
   <meta name="author" content="Toby Weston">
 
   
-  <meta name="description" content="Callable With Exception Generics May 26th, 2012 The tempus-fugit Callable interface extends java.util.concurrent.Callable but allows you to specify &hellip;">
+  <meta name="description" content="Callable With Exception Generics The tempus-fugit Callable interface extends java.util.concurrent.Callable but allows you to specify the exception &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,29 +95,29 @@
   
 
 
-<time datetime="2012-05-26T17:27:00+01:00" pubdate data-updated="true">May 26<span>th</span>, 2012</time></p>
+<time datetime="2012-05-26T17:27:00+01:00" pubdate data-updated="true"></time></p>
   </header>
   
-  <p>The tempus-fugit <code>Callable</code> interface extends <code>java.util.concurrent.Callable</code> but allows you to specify the exception as a generic type. This class has a fairly limited usage and isn&#8217;t recommended over the standard Java version. Instead, if you create a method that takes a <code>java.util.concurrent.Callable</code> as a argument, calling it will force the method to throw <code>Exception</code>. If instead, you pass in a <code>com.google.code.tempusfugit.concurrency.Callable</code>, you can specify the specific exception to throw and therefore avoid being forced to throw <code>Exception</code>. For example</p>
+  <p>The tempus-fugit <code>Callable</code> interface extends <code>java.util.concurrent.Callable</code> but allows you to specify the exception as a generic type. This class has a fairly limited usage and isn't recommended over the standard Java version. Instead, if you create a method that takes a <code>java.util.concurrent.Callable</code> as a argument, calling it will force the method to throw <code>Exception</code>. If instead, you pass in a <code>com.google.code.tempusfugit.concurrency.Callable</code>, you can specify the specific exception to throw and therefore avoid being forced to throw <code>Exception</code>. For example</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">foo</span><span class="o">(</span><span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">concurrent</span><span class="o">.</span><span class="na">Callable</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">callable</span><span class="o">)</span> <span class="kd">throws</span> <span class="o">**</span><span class="n">Exception</span><span class="o">**</span> <span class="o">{</span>
 </span><span class='line'>    <span class="k">return</span> <span class="n">callable</span><span class="o">.</span><span class="na">call</span><span class="o">();</span>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>Whereas using the tempus-fugit version allows a more specific exception to be thrown.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="n">bar</span><span class="o">(</span><span class="n">com</span><span class="o">.</span><span class="na">google</span><span class="o">.</span><span class="na">code</span><span class="o">.</span><span class="na">tempusfugit</span><span class="o">.</span><span class="na">concurrency</span><span class="o">.</span><span class="na">Callable</span><span class="o">&lt;</span><span class="n">T</span><span class="o">,</span> <span class="n">RuntimeException</span><span class="o">&gt;</span> <span class="n">callable</span><span class="o">)</span> <span class="o">{</span>
 </span><span class='line'>    <span class="k">return</span> <span class="n">callable</span><span class="o">.</span><span class="na">call</span><span class="o">();</span>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p><a href="/documentation/time/">Next, Testing Time Sensitive Code &raquo;</a></p>

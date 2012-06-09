@@ -9,7 +9,7 @@
   <meta name="author" content="Toby Weston">
 
   
-  <meta name="description" content="Countdown Latch With Timeout May 26th, 2012 Using an instance of a java.util.concurrent.CountDownLatch, we can wait for a latch to count down to &hellip;">
+  <meta name="description" content="Countdown Latch With Timeout Using an instance of a java.util.concurrent.CountDownLatch, we can wait for a latch to count down to zero, blocking the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,14 +95,14 @@
   
 
 
-<time datetime="2012-05-26T16:52:00+01:00" pubdate data-updated="true">May 26<span>th</span>, 2012</time></p>
+<time datetime="2012-05-26T16:52:00+01:00" pubdate data-updated="true"></time></p>
   </header>
   
   <p>Using an instance of a <code>java.util.concurrent.CountDownLatch</code>, we can wait for a latch to count down to zero, blocking the calling thread before continuing. When passing in a timeout, the method returns <code>true</code> if the count reached zero or false if the timeout expires.</p>
 
 <p>To make the timeout more explicit, the <code>CountDownLatchWithTimeout</code> class will throw a <code>TimeoutException</code> rather than force you to check. Using a static import, the example looks like the following.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -112,10 +112,10 @@
 </span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">waitForStartup</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">InterruptedException</span><span class="o">,</span> <span class="n">TimeoutException</span> <span class="o">{</span>
 </span><span class='line'>    <span class="n">await</span><span class="o">(</span><span class="n">startup</span><span class="o">).</span><span class="na">with</span><span class="o">(</span><span class="n">TIMEOUT</span><span class="o">);</span>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
-<p>The use of the <code>with</code> method is required. Following the <a href="http://baddotrobot.com/blog/2009/02/16/more-on-micro-dsls/">micro- DSL</a> approach, it is the <code>with</code> that actually does the waiting. Calling the <code>await</code> method on it&#8217;s own will not block.</p>
+<p>The use of the <code>with</code> method is required. Following the <a href="http://baddotrobot.com/blog/2009/02/16/more-on-micro-dsls/">micro- DSL</a> approach, it is the <code>with</code> that actually does the waiting. Calling the <code>await</code> method on it's own will not block.</p>
 
 <p><a href="/documentation/concurrency/locks">Next, Concurrency Utilities: Always Execute Using Locks &raquo;</a></p>
 

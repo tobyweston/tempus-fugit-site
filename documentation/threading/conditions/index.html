@@ -9,7 +9,7 @@
   <meta name="author" content="Toby Weston">
 
   
-  <meta name="description" content="Thread Conditions May 25th, 2012 Wait for a Thread to be in a State Conditions.isWaiting(Thread thread) A Condition that allows you to test if a &hellip;">
+  <meta name="description" content="Thread Conditions Wait for a Thread to be in a State Conditions.isWaiting(Thread thread) A Condition that allows you to test if a thread is in a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,7 +95,7 @@
   
 
 
-<time datetime="2012-05-25T19:44:00+01:00" pubdate data-updated="true">May 25<span>th</span>, 2012</time></p>
+<time datetime="2012-05-25T19:44:00+01:00" pubdate data-updated="true"></time></p>
   </header>
   
   <h2>Wait for a Thread to be in a State</h2>
@@ -104,38 +104,38 @@
 
 <p>A Condition that allows you to test if a thread is in a waiting state. For example,</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">waitOrTimeout</span><span class="o">(</span><span class="n">isWaiting</span><span class="o">(</span><span class="n">thread</span><span class="o">),</span> <span class="n">timeout</span><span class="o">(</span><span class="n">seconds</span><span class="o">(</span><span class="mi">10</span><span class="o">)));</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p><code>Conditions.is(Thread thread, Thread.State state)</code></p>
 
 <p>A more general purpose <code>Condition</code> to check that a thread is in a given state. For example,</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">waitOrTimeout</span><span class="o">(</span><span class="n">is</span><span class="o">(</span><span class="n">thread</span><span class="o">,</span> <span class="n">TERMINATED</span><span class="o">),</span> <span class="n">timeout</span><span class="o">(</span><span class="n">seconds</span><span class="o">(</span><span class="mi">10</span><span class="o">)));</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p><code>Conditions.isAlive(Thread thread)</code></p>
 
 <p>Checks that a thread is alive. A thread is alive if it has been started and has not yet died. For example,</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">isAlive</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">()));</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <h2>Wait for an Executor to Shutdown</h2>
 
 <p><code>Conditions.shutdown(ExecutorService service)</code></p>
 
-<p>Checks that a <code>java.util.concurrent.ExecutorService</code> has been shutdown according to the result of the it&#8217;s <code>isShutdown</code> method. This might be useful if you&#8217;d like to wait for shutdown. The tempus-fugit <code>ExecutorServiceShutdown</code> class does just this.</p>
+<p>Checks that a <code>java.util.concurrent.ExecutorService</code> has been shutdown according to the result of the it's <code>isShutdown</code> method. This might be useful if you'd like to wait for shutdown. The tempus-fugit <code>ExecutorServiceShutdown</code> class does just this.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">waitOrTimeout</span><span class="o">(</span><span class="n">Conditions</span><span class="o">.</span><span class="na">shutdown</span><span class="o">(</span><span class="n">executor</span><span class="o">),</span> <span class="n">timeout</span><span class="o">);</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <h2>Invert a Condition</h2>
@@ -144,9 +144,9 @@
 
 <p>The <code>NotCondition</code> will negate the logical result of some other condition. For example, we can change the example above to wait until a thread is <em>not</em> in a waiting state by using the following.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">waitOrTimeout</span><span class="o">(</span><span class="n">not</span><span class="o">(</span><span class="n">isWaiting</span><span class="o">(</span><span class="n">thread</span><span class="o">)),</span> <span class="n">timeout</span><span class="o">(</span><span class="n">seconds</span><span class="o">(</span><span class="mi">10</span><span class="o">)));</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p><a href="/documentation/threading/misc">Next, Thread Utilities: Miscellaneous &raquo;</a></p>

@@ -9,7 +9,7 @@
   <meta name="author" content="Toby Weston">
 
   
-  <meta name="description" content="Miscellaneous May 25th, 2012 Wrap Exceptions The ExceptionWrapper class allows you to run arbitrary code in a Callable block catching any Throwable &hellip;">
+  <meta name="description" content="Miscellaneous Wrap Exceptions The ExceptionWrapper class allows you to run arbitrary code in a Callable block catching any Throwable and rethrowing &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,14 +95,14 @@
   
 
 
-<time datetime="2012-05-25T19:44:00+01:00" pubdate data-updated="true">May 25<span>th</span>, 2012</time></p>
+<time datetime="2012-05-25T19:44:00+01:00" pubdate data-updated="true"></time></p>
   </header>
   
   <h2>Wrap Exceptions</h2>
 
-<p>The <code>ExceptionWrapper</code> class allows you to run arbitrary code in a <code>Callable</code> block catching any <code>Throwable</code> and rethrowing as an exception of your choice. The thrown exception embeds the originating exception as it&#8217;s cause. For example,</p>
+<p>The <code>ExceptionWrapper</code> class allows you to run arbitrary code in a <code>Callable</code> block catching any <code>Throwable</code> and rethrowing as an exception of your choice. The thrown exception embeds the originating exception as it's cause. For example,</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -114,23 +114,23 @@
 </span><span class='line'>        <span class="c1">// nasty code throwing a bunch of exceptions</span>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'><span class="o">},</span> <span class="n">WithException</span><span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="n">CalendarException</span><span class="o">.</span><span class="na">class</span><span class="o">));</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
-<p>If you&#8217;d rather just convert checked exceptions to <code>RuntimeException</code>, just use the &#8216;wrapAsRuntimeException` method. Again, it will embed the originating exception so you won&#8217;t loose the information.</p>
+<p>If you'd rather just convert checked exceptions to <code>RuntimeException</code>, just use the 'wrapAsRuntimeException` method. Again, it will embed the originating exception so you won't loose the information.</p>
 
 <p>The example below has the creation of the anonymous <code>Callable</code> class pushed into the method <code>something</code>.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">ExceptionWrapper</span><span class="o">.</span><span class="na">wrapAsRuntimeException</span><span class="o">(</span><span class="n">something</span><span class="o">());</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <h2>Default Thread Factory</h2>
 
 <p>Nothing fancy, the <code>DefaultThreadFactory</code> offers the default implementation of <code>java.util.concurrent.ThreadFactory</code> shown below.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -142,7 +142,7 @@
 </span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">Thread</span><span class="o">(</span><span class="n">runnable</span><span class="o">);</span>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p><a href="/documentation/concurrency/">Next, Concurrency Utilities &raquo;</a></p>

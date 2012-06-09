@@ -9,7 +9,7 @@
   <meta name="author" content="Toby Weston">
 
   
-  <meta name="description" content="Waiting for Conditions May 26th, 2012 The WaitFor class can be used to periodically check if a Condition is satisfied, sleeping for a short period &hellip;">
+  <meta name="description" content="Waiting for Conditions The WaitFor class can be used to periodically check if a Condition is satisfied, sleeping for a short period if it has not &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,7 +95,7 @@
   
 
 
-<time datetime="2012-05-26T17:45:00+01:00" pubdate data-updated="true">May 26<span>th</span>, 2012</time></p>
+<time datetime="2012-05-26T17:45:00+01:00" pubdate data-updated="true"></time></p>
   </header>
   
   <p>The <code>WaitFor</code> class can be used to periodically check if a <code>Condition</code> is satisfied, sleeping for a short period if it has not before checking again. The methods available are</p>
@@ -110,7 +110,7 @@
 
 <p>For example, waiting for a thread to move into a waiting state can be implemented like this;</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -124,14 +124,14 @@
 </span><span class='line'>        <span class="o">}</span>
 </span><span class='line'>    <span class="o">},</span> <span class="n">timeout</span><span class="o">(</span><span class="n">seconds</span><span class="o">(</span><span class="mi">10</span><span class="o">)));</span>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>Where <code>WaitFor.waitOrTimeout</code> has been statically imported and <code>Timeout.timeout</code> is a static constructor for a <code>Timeout</code> object.</p>
 
-<p>A call to <code>waitOrTimeout</code> will also throw a <code>TimeoutException</code> if it times out. However, you can call an overloaded version which doesn&#8217;t throw the exception but instead executes some behaviour you pass in via a <code>Callable</code> instance. For example,</p>
+<p>A call to <code>waitOrTimeout</code> will also throw a <code>TimeoutException</code> if it times out. However, you can call an overloaded version which doesn't throw the exception but instead executes some behaviour you pass in via a <code>Callable</code> instance. For example,</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -147,7 +147,7 @@
 </span><span class='line'>        <span class="o">}</span>
 </span><span class='line'>    <span class="o">},</span> <span class="n">timeout</span><span class="o">(</span><span class="n">seconds</span><span class="o">(</span><span class="mi">10</span><span class="o">)));</span>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p><a href="/documentation/time/timeouts">Next, Testing Time Sensitive Code: Timeouts &raquo;</a></p>

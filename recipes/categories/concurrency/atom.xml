@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Concurrency | tempus-fugit]]></title>
   <link href="http://tempusfugitlibrary.org/recipes/categories/concurrency/atom.xml" rel="self"/>
   <link href="http://tempusfugitlibrary.org/"/>
-  <updated>2012-06-07T22:40:19+01:00</updated>
+  <updated>2012-06-09T21:13:56+01:00</updated>
   <id>http://tempusfugitlibrary.org/</id>
   <author>
     <name><![CDATA[Toby Weston]]></name>
@@ -24,6 +24,9 @@
 </code></pre>
 
 <p>If you really need multi-threaded access to the mockery, it's a <a href="/recipes/2012/06/01/making-jmock-thread-safe">straight forward fix</a> to swap the policy out. As in the log line above though, sometimes the JVM's finaliser thread sticks it's oar in and confuses the <code>SingleThreadedPolicy</code>.</p>
+
+<!-- more -->
+
 
 <p>To get rid of this, you can set a custom threading policy that performs the same check as the default, just not when the finaliser thread is involved.</p>
 
@@ -123,6 +126,9 @@
     <content type="html"><![CDATA[<p>JMock's <code>Synchronizer</code> serialises access to the mock object's "context", it means all invocations of mocked methods call will be <code>synchronized</code> on the same monitor, effectively forcing them to run in sequence without thread safety concerns. As it uses <code>synchronized</code> though, you can (with some effort) get into trouble with tests that never finish.</p>
 
 <p>If you're seeing this kind of thing, appart from using the <code>@Test(timeout=1000)</code> annotation, you might consider an alternative <code>ThreadingPolicy</code> implementation using <code>Lock</code>s that can timeout and maintain liveliness.</p>
+
+<!-- more -->
+
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>

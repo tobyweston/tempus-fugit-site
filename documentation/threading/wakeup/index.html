@@ -9,7 +9,7 @@
   <meta name="author" content="Toby Weston">
 
   
-  <meta name="description" content="Schedule Interruption (Wake a Sleeping Thread) May 25th, 2012 The Interrupter class allows you to schedule an interrupt on a thread after a &hellip;">
+  <meta name="description" content="Schedule Interruption (Wake a Sleeping Thread) The Interrupter class allows you to schedule an interrupt on a thread after a specified duration. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,12 +95,12 @@
   
 
 
-<time datetime="2012-05-25T19:49:00+01:00" pubdate data-updated="true">May 25<span>th</span>, 2012</time></p>
+<time datetime="2012-05-25T19:49:00+01:00" pubdate data-updated="true"></time></p>
   </header>
   
   <p>The <code>Interrupter</code> class allows you to schedule an <code>interrupt</code> on a thread after a specified duration. This can be useful when implementing timeouts on classes that support the use of <code>interrupt</code> as an interruption policy. For example, the code below sets up an interrupt to be scheduled after some timeout, before embarking on some potentially long running process. The <code>Interrupter</code> and <code>Thread</code> classes have been statically imported.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -116,7 +116,7 @@
 </span><span class='line'><span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
 </span><span class='line'>    <span class="n">interrupter</span><span class="o">.</span><span class="na">cancel</span><span class="o">();</span>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>The <code>Interrupter</code> spawns a thread which sleeps (using <code>WaitFor</code>) until the timeout expires. It then just calls <code>interrupt</code> on the passed in thread. It is important therefore to ensure you cancel the interrupt as above for the case when the long running process could finish before the timeout. The <code>cancel</code> has no affect if the timeout has already expired so using a <code>finally</code> block is recommended.</p>

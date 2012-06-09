@@ -9,7 +9,7 @@
   <meta name="author" content="Toby Weston">
 
   
-  <meta name="description" content="Intermittent Tests May 26th, 2012 As much as possible, you aim to have a completely deterministic tests but despite your best efforts, the odd &hellip;">
+  <meta name="description" content="Intermittent Tests As much as possible, you aim to have a completely deterministic tests but despite your best efforts, the odd flickering test can &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,14 +95,14 @@
   
 
 
-<time datetime="2012-05-26T17:12:00+01:00" pubdate data-updated="true">May 26<span>th</span>, 2012</time></p>
+<time datetime="2012-05-26T17:12:00+01:00" pubdate data-updated="true"></time></p>
   </header>
   
   <p>As much as possible, you aim to have a completely deterministic tests but despite your best efforts, the odd flickering test can still get through. Occasionally, you might want to run such a test repeatedly to get an idea of its indeterminacy. The <code>Intermittent</code> annotation can be combined with the <code>IntermittentTestRunner</code> to provide this behaviour along side <a href="http://junit.org/">junit</a>.</p>
 
 <p>You simply mark a junit test method (or class) as potentially intermittent using the <code>Intermittent</code> annotation as follows.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -112,12 +112,12 @@
 </span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">flickering</span><span class="o">()</span> <span class="o">{</span>
 </span><span class='line'>   <span class="c1">// ...</span>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>You can then use the <code>@RunWith</code> annotation to run the test using the <code>IntermittentTestRunner</code>. Any <code>@Before</code> or <code>@After</code> methods will be run once for each test repetition. The example below also shows that the repetition count can be overridden on the method annotation.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -173,12 +173,12 @@
 </span><span class='line'>        <span class="n">assertThat</span><span class="o">(</span><span class="n">testCounter</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="n">equalTo</span><span class="o">(</span><span class="mi">99</span><span class="o">)));</span>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>If you annotate the class rather than individual test methods, every test method of the class will be treated as if it were marked as <code>@Intermittent</code>.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -222,7 +222,7 @@
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p><a href="/documentation/junit/parallel/">Next, JUnit Integration: Running Tests in Parallel &raquo;</a></p>

@@ -9,7 +9,7 @@
   <meta name="author" content="Toby Weston">
 
   
-  <meta name="description" content="Running Tests in Parallel May 26th, 2012 With tempus-fugit, you can easily run tests methods in parallel. Each test method within a class will run &hellip;">
+  <meta name="description" content="Running Tests in Parallel With tempus-fugit, you can easily run tests methods in parallel. Each test method within a class will run on its own &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,14 +95,14 @@
   
 
 
-<time datetime="2012-05-26T17:13:00+01:00" pubdate data-updated="true">May 26<span>th</span>, 2012</time></p>
+<time datetime="2012-05-26T17:13:00+01:00" pubdate data-updated="true"></time></p>
   </header>
   
   <p>With tempus-fugit, you can easily run tests methods in parallel. Each test method within a class will run on its own thread and in parallel with any other test methods in that class. So, the number of threads for a given test class will be equal to the number of test methods within that class.</p>
 
 <p>Simply mark your test to be <code>@RunWith</code> the <code>ConcurrentTestRunner</code> class as below.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -138,7 +138,7 @@
 </span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;I&#39;m running on thread &quot;</span> <span class="o">+</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">());</span>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>In this example, each of the individual test methods are run once but in their own thread, all spawned roughly at the same time. The output from the above might look like the following.</p>

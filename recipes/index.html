@@ -116,83 +116,12 @@
 
 <p>If you really need multi-threaded access to the mockery, it&#8217;s a <a href="/recipes/2012/06/01/making-jmock-thread-safe">straight forward fix</a> to swap the policy out. As in the log line above though, sometimes the JVM&#8217;s finaliser thread sticks it&#8217;s oar in and confuses the <code>SingleThreadedPolicy</code>.</p>
 
-<p>To get rid of this, you can set a custom threading policy that performs the same check as the default, just not when the finaliser thread is involved.</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="kd">final</span> <span class="n">Mockery</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mockery</span><span class="o">()</span> <span class="o">{{</span>
-</span><span class='line'>    <span class="n">setThreadingPolicy</span><span class="o">(</span><span class="k">new</span> <span class="n">SingleThreadedPolicyAvoidingFinaliseProblems</span><span class="o">());</span>
-</span><span class='line'><span class="o">}};</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">SingleThreadedPolicyAvoidingFinaliseProblems</span> <span class="kd">extends</span> <span class="n">SingleThreadedPolicy</span> <span class="o">{</span>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">Invokable</span> <span class="nf">synchroniseAccessTo</span><span class="o">(</span><span class="n">Invokable</span> <span class="n">unsynchronizedInvocation</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">Invokable</span> <span class="n">synchronizedInvocation</span> <span class="o">=</span> <span class="kd">super</span><span class="o">.</span><span class="na">synchroniseAccessTo</span><span class="o">(</span><span class="n">unsynchronizedInvocation</span><span class="o">);</span>
-</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">InvokeBasedOnCurrentThreadBeingTheFinalizerThread</span><span class="o">(</span><span class="n">unsynchronizedInvocation</span><span class="o">,</span> <span class="n">synchronizedInvocation</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">InvokeBasedOnCurrentThreadBeingTheFinalizerThread</span> <span class="kd">implements</span> <span class="n">Invokable</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Invokable</span> <span class="n">whenOnFinalizerThread</span><span class="o">;</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Invokable</span> <span class="n">whenNotFinalizerThread</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">InvokeBasedOnCurrentThreadBeingTheFinalizerThread</span><span class="o">(</span><span class="n">Invokable</span> <span class="n">whenOnFinalizerThread</span><span class="o">,</span> <span class="n">Invokable</span> <span class="n">whenNotFinalizerThread</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">whenOnFinalizerThread</span> <span class="o">=</span> <span class="n">whenOnFinalizerThread</span><span class="o">;</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">whenNotFinalizerThread</span> <span class="o">=</span> <span class="n">whenNotFinalizerThread</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">invoke</span><span class="o">(</span><span class="n">Invocation</span> <span class="n">invocation</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Throwable</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">currentThreadIs</span><span class="o">(</span><span class="s">&quot;Finalizer&quot;</span><span class="o">))</span>
-</span><span class='line'>            <span class="k">return</span> <span class="n">whenOnFinalizerThread</span><span class="o">.</span><span class="na">invoke</span><span class="o">(</span><span class="n">invocation</span><span class="o">);</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">whenNotFinalizerThread</span><span class="o">.</span><span class="na">invoke</span><span class="o">(</span><span class="n">invocation</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">currentThreadIs</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">().</span><span class="na">equalsIgnoreCase</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>See the bug report <a href="http://jira.codehaus.org/browse/JMOCK-256">JMOCK-256</a> for more details.</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/recipes/2012/06/01/avoid-jmock-finaliser-problems/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -230,158 +159,12 @@
 
 <p>If you&#8217;re seeing this kind of thing, appart from using the <code>@Test(timeout=1000)</code> annotation, you might consider an alternative <code>ThreadingPolicy</code> implementation using <code>Lock</code>s that can timeout and maintain liveliness.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TimingOutSynchroniser</span> <span class="kd">implements</span> <span class="n">ThreadingPolicy</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Lock</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantLock</span><span class="o">();</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Condition</span> <span class="n">awaitingStatePredicate</span> <span class="o">=</span> <span class="n">lock</span><span class="o">.</span><span class="na">newCondition</span><span class="o">();</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Duration</span> <span class="n">lockTimeout</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">Error</span> <span class="n">firstError</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">TimingOutSynchroniser</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">(</span><span class="n">millis</span><span class="o">(</span><span class="mi">250</span><span class="o">));</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">TimingOutSynchroniser</span><span class="o">(</span><span class="n">Duration</span> <span class="n">timeout</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">lockTimeout</span> <span class="o">=</span> <span class="n">timeout</span><span class="o">;</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">waitUntil</span><span class="o">(</span><span class="n">StatePredicate</span> <span class="n">predicate</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">waitUntil</span><span class="o">(</span><span class="n">predicate</span><span class="o">,</span> <span class="k">new</span> <span class="n">InfiniteTimeout</span><span class="o">());</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="cm">/**</span>
-</span><span class='line'><span class="cm">     * Waits up to a timeout for a StatePredicate to become active.  Fails the</span>
-</span><span class='line'><span class="cm">     * test if the timeout expires.</span>
-</span><span class='line'><span class="cm">     */</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">waitUntil</span><span class="o">(</span><span class="n">StatePredicate</span> <span class="n">predicate</span><span class="o">,</span> <span class="kt">long</span> <span class="n">timeoutMs</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">waitUntil</span><span class="o">(</span><span class="n">predicate</span><span class="o">,</span> <span class="k">new</span> <span class="n">FixedTimeout</span><span class="o">(</span><span class="n">timeoutMs</span><span class="o">));</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">waitUntil</span><span class="o">(</span><span class="n">StatePredicate</span> <span class="n">predicate</span><span class="o">,</span> <span class="n">Timeout</span> <span class="n">testTimeout</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">lock</span><span class="o">.</span><span class="na">tryLock</span><span class="o">(</span><span class="n">lockTimeout</span><span class="o">.</span><span class="na">inMillis</span><span class="o">(),</span> <span class="n">MILLISECONDS</span><span class="o">);</span>
-</span><span class='line'>            <span class="k">while</span> <span class="o">(!</span><span class="n">predicate</span><span class="o">.</span><span class="na">isActive</span><span class="o">())</span> <span class="o">{</span>
-</span><span class='line'>                <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>                    <span class="n">awaitingStatePredicate</span><span class="o">.</span><span class="na">await</span><span class="o">(</span><span class="n">testTimeout</span><span class="o">.</span><span class="na">timeRemaining</span><span class="o">(),</span> <span class="n">MILLISECONDS</span><span class="o">);</span>
-</span><span class='line'>                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">TimeoutException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                    <span class="k">if</span> <span class="o">(</span><span class="n">firstError</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
-</span><span class='line'>                        <span class="k">throw</span> <span class="n">firstError</span><span class="o">;</span>
-</span><span class='line'>                    <span class="n">Assert</span><span class="o">.</span><span class="na">fail</span><span class="o">(</span><span class="s">&quot;timed out waiting for &quot;</span> <span class="o">+</span> <span class="n">asString</span><span class="o">(</span><span class="n">predicate</span><span class="o">));</span>
-</span><span class='line'>                <span class="o">}</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">lock</span><span class="o">.</span><span class="na">tryLock</span><span class="o">())</span>
-</span><span class='line'>                <span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="n">Invokable</span> <span class="nf">synchroniseAccessTo</span><span class="o">(</span><span class="kd">final</span> <span class="n">Invokable</span> <span class="n">mockObject</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nf">Invokable</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>            <span class="kd">public</span> <span class="n">Object</span> <span class="nf">invoke</span><span class="o">(</span><span class="n">Invocation</span> <span class="n">invocation</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Throwable</span> <span class="o">{</span>
-</span><span class='line'>                <span class="k">return</span> <span class="nf">synchroniseInvocation</span><span class="o">(</span><span class="n">mockObject</span><span class="o">,</span> <span class="n">invocation</span><span class="o">);</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>        <span class="o">};</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">private</span> <span class="n">Object</span> <span class="nf">synchroniseInvocation</span><span class="o">(</span><span class="n">Invokable</span> <span class="n">mockObject</span><span class="o">,</span> <span class="n">Invocation</span> <span class="n">invocation</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Throwable</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">lock</span><span class="o">.</span><span class="na">tryLock</span><span class="o">(</span><span class="n">lockTimeout</span><span class="o">.</span><span class="na">inMillis</span><span class="o">(),</span> <span class="n">MILLISECONDS</span><span class="o">);</span>
-</span><span class='line'>            <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>                <span class="k">return</span> <span class="n">mockObject</span><span class="o">.</span><span class="na">invoke</span><span class="o">(</span><span class="n">invocation</span><span class="o">);</span>
-</span><span class='line'>            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Error</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                <span class="k">if</span> <span class="o">(</span><span class="n">firstError</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
-</span><span class='line'>                    <span class="n">firstError</span> <span class="o">=</span> <span class="n">e</span><span class="o">;</span>
-</span><span class='line'>                <span class="k">throw</span> <span class="n">e</span><span class="o">;</span>
-</span><span class='line'>            <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
-</span><span class='line'>                <span class="n">awaitingStatePredicate</span><span class="o">.</span><span class="na">signalAll</span><span class="o">();</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">lock</span><span class="o">.</span><span class="na">tryLock</span><span class="o">())</span>
-</span><span class='line'>                <span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/recipes/2012/06/01/timeout-jmock-synchroniser/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -571,7 +354,7 @@
     </br>
     <blockquote>
         <p>
-            &#8220;We always strain at the limits of our ability to comprehend the artifacts we construct &#8211; that&#8217;s true for software and for skyscrapers.&#8221;
+            "We always strain at the limits of our ability to comprehend the artifacts we construct -- that's true for software and for skyscrapers."
         </p>
         <footer>
             <strong>James Gosling</strong>

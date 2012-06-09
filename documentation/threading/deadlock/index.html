@@ -9,7 +9,7 @@
   <meta name="author" content="Toby Weston">
 
   
-  <meta name="description" content="Deadlock Detection May 25th, 2012 The DeadlockDetector class allows you to programmatically detect basic deadlocks in your Java code. You can output &hellip;">
+  <meta name="description" content="Deadlock Detection The DeadlockDetector class allows you to programmatically detect basic deadlocks in your Java code. You can output deadlocks &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,14 +95,14 @@
   
 
 
-<time datetime="2012-05-25T19:49:00+01:00" pubdate data-updated="true">May 25<span>th</span>, 2012</time></p>
+<time datetime="2012-05-25T19:49:00+01:00" pubdate data-updated="true"></time></p>
   </header>
   
   <p>The <code>DeadlockDetector</code> class allows you to programmatically detect basic deadlocks in your Java code. You can output deadlocks using the following code (note that printing a thread dump using the <code>ThreadDump</code> class will automatically attempt to find any deadlocks).</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">DeadlockDetector</span><span class="o">.</span><span class="na">printDeadlocks</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">);</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>There are various types of deadlock in concurrent systems, broadly speaking with regard to Java, they can be categorised as</p>
@@ -115,9 +115,9 @@
 </ul>
 
 
-<p>The <code>DeadlockDecector</code> class can only spot Java monitor cyclic locking problems. It&#8217;s implementation is basically the same as that used by <code>jconsole</code> and <code>jstack</code> and suffers the same limitations. Java 1.6 versions of <code>jstack</code> and <code>jconsole</code> can additionally detect <code>Lock</code> based cyclic problems. The types of deadlock it can detect can be illustrated in the example below.</p>
+<p>The <code>DeadlockDecector</code> class can only spot Java monitor cyclic locking problems. It's implementation is basically the same as that used by <code>jconsole</code> and <code>jstack</code> and suffers the same limitations. Java 1.6 versions of <code>jstack</code> and <code>jconsole</code> can additionally detect <code>Lock</code> based cyclic problems. The types of deadlock it can detect can be illustrated in the example below.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -165,7 +165,7 @@
 </span><span class='line'>         <span class="o">}</span>
 </span><span class='line'>     <span class="o">}</span>
 </span><span class='line'> <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>Here, the <code>Kidnapper</code> is unwilling to release poor Nibbles the <code>Cat</code> until he has the <code>Cash</code> but our <code>Negotiator</code> is unwilling to part with the <code>Cash</code> until he has poor Nibbles back in his arms. The deadlock detector displays this woeful situation as follows.</p>

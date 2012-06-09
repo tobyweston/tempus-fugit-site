@@ -9,7 +9,7 @@
   <meta name="author" content="Toby Weston">
 
   
-  <meta name="description" content="Durations May 26th, 2012 Frequently, some length of time is represented as a long in Java. The trouble here is that you don&#8217;t always know what &hellip;">
+  <meta name="description" content="Durations Frequently, some length of time is represented as a long in Java. The trouble here is that you don't always know what time unit the long &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,33 +95,33 @@
   
 
 
-<time datetime="2012-05-26T17:43:00+01:00" pubdate data-updated="true">May 26<span>th</span>, 2012</time></p>
+<time datetime="2012-05-26T17:43:00+01:00" pubdate data-updated="true"></time></p>
   </header>
   
-  <p>Frequently, some length of time is represented as a <code>long</code> in Java. The trouble here is that you don&#8217;t always know what time unit the <code>long</code> represents and as <a href="http://java.sun.com/docs/books/effective/">Effective Java</a> recommends, you&#8217;ll often end up with something like the following</p>
+  <p>Frequently, some length of time is represented as a <code>long</code> in Java. The trouble here is that you don't always know what time unit the <code>long</code> represents and as <a href="http://java.sun.com/docs/books/effective/">Effective Java</a> recommends, you'll often end up with something like the following</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">connection</span><span class="o">.</span><span class="na">setReadTimeout</span><span class="o">(</span><span class="n">TIMEOUT_IN_MILLIS</span><span class="o">);</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>or you might come across unhelpful code like this;</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">connection</span><span class="o">.</span><span class="na">setReadTimeout</span><span class="o">(</span><span class="mi">1000</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">60</span><span class="o">);</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>This is all very error prone, ugly and in the second case, fails to convey the intent. The <code>Duration</code> class captures a length of time and forces you to express the time unit. So, for example,</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">connection</span><span class="o">.</span><span class="na">setReadTimeout</span><span class="o">(</span><span class="n">seconds</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>Using <code>Duration</code> in your own method forces your clients to create use an explicit time unit and you can convert back explicitly. for example,</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -131,7 +131,7 @@
 </span><span class='line'>   <span class="n">readTimeout</span> <span class="o">=</span> <span class="n">timeout</span><span class="o">.</span><span class="na">inMillis</span><span class="o">();</span>
 </span><span class='line'>   <span class="o">...</span>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p><a href="/documentation/time/conditions">Next, Testing Time Sensitive Code: Conditions &raquo;</a></p>

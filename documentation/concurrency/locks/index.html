@@ -9,7 +9,7 @@
   <meta name="author" content="Toby Weston">
 
   
-  <meta name="description" content="Always Execute Using Locks May 26th, 2012 Using implementations of the java.util.concurrent.locks.Lock requires that the lock is acquired and &hellip;">
+  <meta name="description" content="Always Execute Using Locks Using implementations of the java.util.concurrent.locks.Lock requires that the lock is acquired and released after use. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,12 +95,12 @@
   
 
 
-<time datetime="2012-05-26T16:54:00+01:00" pubdate data-updated="true">May 26<span>th</span>, 2012</time></p>
+<time datetime="2012-05-26T16:54:00+01:00" pubdate data-updated="true"></time></p>
   </header>
   
   <p>Using implementations of the <code>java.util.concurrent.locks.Lock</code> requires that the lock is acquired and released after use. This leads to the common idiom below.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -114,12 +114,12 @@
 </span><span class='line'><span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
 </span><span class='line'>    <span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>The <code>ExecuteUsingLock</code> class provides a way to abstract the lock acquisition and release and ensure consistency across your code. It takes a <code>Callable</code> representing the statements to execute whilst the lock is acquired and the actual lock to use when executing and ensures the lock is always released.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -141,7 +141,7 @@
 </span><span class='line'>        <span class="o">}</span>
 </span><span class='line'>    <span class="o">};</span>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p><a href="/documentation/concurrency/completion">Next, Concurrency Utilities: Timeoutable Completion Service &raquo;</a></p>

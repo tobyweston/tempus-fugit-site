@@ -9,7 +9,7 @@
   <meta name="author" content="Toby Weston">
 
   
-  <meta name="description" content="Convert Callable to Runnable May 26th, 2012 The java.util.concurrent.Executors class has helper methods to convert from a Runnable to a Callable but &hellip;">
+  <meta name="description" content="Convert Callable to Runnable The java.util.concurrent.Executors class has helper methods to convert from a Runnable to a Callable but lacks a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,7 +95,7 @@
   
 
 
-<time datetime="2012-05-26T17:27:00+01:00" pubdate data-updated="true">May 26<span>th</span>, 2012</time></p>
+<time datetime="2012-05-26T17:27:00+01:00" pubdate data-updated="true"></time></p>
   </header>
   
   <p>The <code>java.util.concurrent.Executors</code> class has helper methods to convert from a <code>Runnable</code> to a <code>Callable</code> but lacks a counterpart to convert a <code>Callable</code> to a <code>Runnable</code>. This is presumably because a <code>Runnable</code> lacks the ability to throw exceptions or return values.</p>
@@ -104,7 +104,7 @@
 
 <p>The <code>CallableAdapter</code> class will convert from a <code>Callable</code> into a <code>Runnable</code> wrapping any exception as a <code>RuntimeException</code> and discarding any return type. This allows you to write general task code in the form of a <code>Callable</code> without necessarily being hampered if you need to pass in a <code>Runnable</code> to some framework code.</p>
 
-<p>As a concrete example, Java&#8217;s <code>ScheduledExecutorService</code> class doesn&#8217;t allow you to schedule a task with a fixed delay or at a fixed rate. The interface takes a <code>Runnable</code>. However, using the adapter you can schedule a <code>Callable</code> at a fixed rate (ignoring the result). The underlying <code>Callable</code> task could then be used elsewhere where the result is actually used.</p>
+<p>As a concrete example, Java's <code>ScheduledExecutorService</code> class doesn't allow you to schedule a task with a fixed delay or at a fixed rate. The interface takes a <code>Runnable</code>. However, using the adapter you can schedule a <code>Callable</code> at a fixed rate (ignoring the result). The underlying <code>Callable</code> task could then be used elsewhere where the result is actually used.</p>
 
 <p><a href="/documentation/time/">Next, Callables: Callable with Exception Generics &raquo;</a></p>
 

@@ -9,13 +9,13 @@
   <meta name="author" content="Toby Weston">
 
   
-  <meta name="description" content="Sleeping and Interruptions May 25th, 2012 Often, you&#8217;ll see code like the example below 1
+  <meta name="description" content="Sleeping and Interruptions Often, you'll see code like the example below 1
 2
 3
 4
 5
 try { Thread.sleep(100);
-} catch ( &hellip;">
+} catch (InterruptedException e) { // &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -101,12 +101,12 @@ try { Thread.sleep(100);
   
 
 
-<time datetime="2012-05-25T19:41:00+01:00" pubdate data-updated="true">May 25<span>th</span>, 2012</time></p>
+<time datetime="2012-05-25T19:41:00+01:00" pubdate data-updated="true"></time></p>
   </header>
   
-  <p>Often, you&#8217;ll see code like the example below</p>
+  <p>Often, you'll see code like the example below</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -116,23 +116,23 @@ try { Thread.sleep(100);
 </span><span class='line'><span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
 </span><span class='line'>   <span class="c1">// nothing</span>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
-<p>tempus-fugit captures the annoying boiler plate code needed to reset the interrupt flat in situations where you can&#8217;t or don&#8217;t want to rethrow the <code>InterruptedException</code>.</p>
+<p>tempus-fugit captures the annoying boiler plate code needed to reset the interrupt flat in situations where you can't or don't want to rethrow the <code>InterruptedException</code>.</p>
 
 <p>Using the <code>ThreadUtils.sleep method</code>, the above code is rewritten as.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">sleep</span><span class="o">(</span><span class="n">millis</span><span class="o">(</span><span class="mi">100</span><span class="o">));</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>This ensures that the interrupt flag is reset and is more explicit about the <a href="/../../time/durations/">duration</a> of the sleep.</p>
 
 <p>If you want to ensure the interrupt flag is reset for other code, you can use the <code>ThreadUtils.resetInterruptFlagWhen</code> method directly. The <code>Interruptible</code> interface is used to highlight that the lamda-like call you want to execute does in fact throw the <code>InterruptedException</code>. For example;</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -144,14 +144,14 @@ try { Thread.sleep(100);
 </span><span class='line'>        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'><span class="o">});</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>Extracting the lamda-like <code>Interruptible</code> to a method makes the code more expressive;</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">resetInterruptFlagWhen</span><span class="o">(</span><span class="n">sleepingIsInterrupted</span><span class="o">());</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>This is actually how the <code>ThreadUtils.sleep</code> method is implemented within tempus-fugit.</p>

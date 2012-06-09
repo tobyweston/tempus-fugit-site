@@ -9,7 +9,7 @@
   <meta name="author" content="Toby Weston">
 
   
-  <meta name="description" content="Load / Soak Tests May 26th, 2012 The tempus-fugit library offers a RepeatingRule and ConcurrentRule that can be used to run a test method multiple &hellip;">
+  <meta name="description" content="Load / Soak Tests The tempus-fugit library offers a RepeatingRule and ConcurrentRule that can be used to run a test method multiple times and across &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,14 +95,14 @@
   
 
 
-<time datetime="2012-05-26T17:15:00+01:00" pubdate data-updated="true">May 26<span>th</span>, 2012</time></p>
+<time datetime="2012-05-26T17:15:00+01:00" pubdate data-updated="true"></time></p>
   </header>
   
   <p>The tempus-fugit library offers a <code>RepeatingRule</code> and <code>ConcurrentRule</code> that can be used to run a test method multiple times and across multiple threads. This can be useful when writing load or soak tests. For example, you might want to sanity check that your synchronisation is working under load. Both rules work use an annotation and can be used independently or together.</p>
 
 <p>To run multiple instances of a single test method in parallel, you annotate the test method with the associated <code>Concurrent</code> annotation and declare the rule in your test class. For example, you might test the <code>AtomicInteger</code> class in a similar way to this.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -126,14 +126,14 @@
 </span><span class='line'>        <span class="n">counter</span><span class="o">.</span><span class="na">getAndIncrement</span><span class="o">();</span>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'> <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
-<p>Here, the test method is run in parallel across five threads which may or may not expose potential threading issues. It&#8217;s not recommended you use this as your only concurrent testing strategy but it may occasionally find a use.</p>
+<p>Here, the test method is run in parallel across five threads which may or may not expose potential threading issues. It's not recommended you use this as your only concurrent testing strategy but it may occasionally find a use.</p>
 
 <p>To run a test method multiple times, you can take advantage of the <code>Repeating</code> annotation and declare the rule in your test class. This is similar to using the <code>Intermittent</code> annotation but unlike using the <code>@RunWith</code> mechanism, using the <code>Rule</code> will <em>not</em> execute any <code>@Before</code> or <code>@After</code> methods between runs. Using <code>Repeating</code> is also more explicit that you intend to run some kind of load test rather than indicating that a test is intermittently failing.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -167,12 +167,12 @@
 </span><span class='line'>        <span class="n">assertThat</span><span class="o">(</span><span class="n">counter</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="mi">99</span><span class="o">));</span>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>Combining the <code>Concurrent</code> with the <code>Repeating</code> annotation allows you to run a test method repeatedly and across threads. For example, running the following</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -200,7 +200,7 @@
 </span><span class='line'>        <span class="n">counter</span><span class="o">.</span><span class="na">getAndIncrement</span><span class="o">();</span>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'> <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>Will repeat the test method ten times in five threads. Each thread will run the test method ten times, so in our example, the counter will be incremented to fifty.</p>

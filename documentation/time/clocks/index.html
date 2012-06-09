@@ -9,7 +9,7 @@
   <meta name="author" content="Toby Weston">
 
   
-  <meta name="description" content="Testing With the Clock Interface May 26th, 2012 The Clock interface along with its default implementation DefaultClock are aimed at making testing &hellip;">
+  <meta name="description" content="Testing With the Clock Interface The Clock interface along with its default implementation DefaultClock are aimed at making testing classes that &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,14 +95,14 @@
   
 
 
-<time datetime="2012-05-26T17:52:00+01:00" pubdate data-updated="true">May 26<span>th</span>, 2012</time></p>
+<time datetime="2012-05-26T17:52:00+01:00" pubdate data-updated="true"></time></p>
   </header>
   
   <p>The <code>Clock</code> interface along with its default implementation <code>DefaultClock</code> are aimed at making testing classes that require a date easier. Rather than pass around <code>java.util.Date</code> classes which will return the current date when constructed, you can pass around a factory which allows you to control the date.</p>
 
 <p>For example, the <code>StopWatch</code> class maintains an internal <code>Date</code> which it can use to compare with the current time to work out the elapsed time. A straight forward implementation might look like this</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -128,12 +128,12 @@
 </span><span class='line'>        <span class="k">return</span> <span class="nf">millis</span><span class="o">(</span><span class="k">new</span> <span class="n">Date</span><span class="o">().</span><span class="na">getTime</span><span class="o">()</span> <span class="o">-</span> <span class="n">startDate</span><span class="o">.</span><span class="na">getTime</span><span class="o">());</span>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>Writing the (rather silly) test below highlights a problem using real time in the class.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -149,7 +149,7 @@
 </span><span class='line'>        <span class="n">assertThat</span><span class="o">(</span><span class="n">watch</span><span class="o">.</span><span class="na">getElapsedTime</span><span class="o">(),</span> <span class="n">is</span><span class="o">(</span><span class="n">millis</span><span class="o">(</span><span class="mi">100</span><span class="o">)));</span>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'> <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>The test is unlikely to pass!</p>
@@ -164,7 +164,7 @@ Expected: is &lt;Duration 100 MILLISECONDS&gt;
 
 <p>Whereas, if we write the class using a controllable time, we can write a more deterministic test. Here, we create an alternative stop watch implementation and mock the factory using <a href="http://www.jmock.org/">JMock</a>.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -194,12 +194,12 @@ Expected: is &lt;Duration 100 MILLISECONDS&gt;
 </span><span class='line'>        <span class="k">return</span> <span class="nf">millis</span><span class="o">(</span><span class="n">clock</span><span class="o">.</span><span class="na">now</span><span class="o">().</span><span class="na">getTime</span><span class="o">()</span> <span class="o">-</span> <span class="n">startDate</span><span class="o">.</span><span class="na">getTime</span><span class="o">());</span>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>The test becomes clearer</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -217,14 +217,14 @@ Expected: is &lt;Duration 100 MILLISECONDS&gt;
 </span><span class='line'>    <span class="n">BetterStopWatch</span> <span class="n">watch</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BetterStopWatch</span><span class="o">(</span><span class="n">time</span><span class="o">);</span>
 </span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">watch</span><span class="o">.</span><span class="na">getElapsedTime</span><span class="o">(),</span> <span class="n">is</span><span class="o">(</span><span class="n">millis</span><span class="o">(</span><span class="mi">100</span><span class="o">)));</span>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <h2>Movable Clock</h2>
 
 <p>You can use the <code>MovableClock</code> in tests to explicitly move time forward within the context of a test. For example, we can rewrite the test above as follows.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -240,12 +240,12 @@ Expected: is &lt;Duration 100 MILLISECONDS&gt;
 </span><span class='line'>    <span class="n">clock</span><span class="o">.</span><span class="na">incrementBy</span><span class="o">(</span><span class="n">millis</span><span class="o">(</span><span class="mi">100</span><span class="o">));</span>
 </span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">watch</span><span class="o">.</span><span class="na">getElapsedTime</span><span class="o">(),</span> <span class="n">is</span><span class="o">(</span><span class="n">millis</span><span class="o">(</span><span class="mi">100</span><span class="o">)));</span>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <h2>Stop Watches</h2>
 
-<p>The <code>StopWatch</code> class allows you to record the length of time taken between starting and stopping the watch. It&#8217;s used internally with the <code>WaitFor.waitUntil(Timeout timeout, ...)</code> class.</p>
+<p>The <code>StopWatch</code> class allows you to record the length of time taken between starting and stopping the watch. It's used internally with the <code>WaitFor.waitUntil(Timeout timeout, ...)</code> class.</p>
 
 <p><a href="/documentation/annotations">Next, Annotations &raquo;</a></p>
 

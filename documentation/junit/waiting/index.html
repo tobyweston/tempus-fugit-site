@@ -9,7 +9,7 @@
   <meta name="author" content="Toby Weston">
 
   
-  <meta name="description" content="Waiting for Assertions May 26th, 2012 The WaitFor class can be used to wait for a condition to hold. You can use it within your tests to wait for &hellip;">
+  <meta name="description" content="Waiting for Assertions The WaitFor class can be used to wait for a condition to hold. You can use it within your tests to wait for some asynchronous &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,14 +95,14 @@
   
 
 
-<time datetime="2012-05-26T17:16:00+01:00" pubdate data-updated="true">May 26<span>th</span>, 2012</time></p>
+<time datetime="2012-05-26T17:16:00+01:00" pubdate data-updated="true"></time></p>
   </header>
   
   <p>The <code>WaitFor</code> class can be used to wait for a condition to hold. You can use it within your tests to wait for some asynchronous process to complete and so make an assertion in a test.</p>
 
 <p>In the example below, a test verifies that the action of clicking a button will toggle some switch to a different position. However, this test may or may not pass if the <code>clickButton()</code> kicks off an asynchronous process to update the toggle position. It may return immediately having not yet changed the position.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -114,12 +114,12 @@
 </span><span class='line'>    <span class="n">clickButton</span><span class="o">();</span>
 </span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">toggle</span><span class="o">,</span> <span class="n">is</span><span class="o">(</span><span class="n">OFF</span><span class="o">));</span>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>Rewriting the test using a <code>WaitFor</code> would look like this</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -139,12 +139,12 @@
 </span><span class='line'>        <span class="o">}</span>
 </span><span class='line'>    <span class="o">},</span> <span class="n">seconds</span><span class="o">(</span><span class="mi">5</span><span class="o">));</span>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>Here, the test will retry the <code>Condition</code> for five seconds before finally giving up and failing the test. If the condition is true immediately, the wait will continue immediately and the test will continue. By extracting a method to create the <code>Condition</code>, you can further refactor the test to be more expressive and start to create a library of reusable conditions.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -172,12 +172,12 @@
 </span><span class='line'>        <span class="o">}</span>
 </span><span class='line'>    <span class="o">};</span>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>A wait which times out will through a <code>TimeoutException</code> although, since 1.2, you can also supply the <code>waitOrTimeout</code> call with behaviour to execute on timeout (as a <code>Callable</code>). For example;</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -191,12 +191,12 @@
 </span><span class='line'>        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'><span class="o">},</span> <span class="n">timeout</span><span class="o">(</span><span class="n">millis</span><span class="o">(</span><span class="mi">500</span><span class="o">)));</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p>will not throw a <code>TimeoutException</code> but instead notify some observer of the failure. Refactored a little, it would look like this</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -218,7 +218,7 @@
 </span><span class='line'>        <span class="o">}</span>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 <p><a href="/documentation/junit/interrupt/">Next, JUnit Integration: Testing Interrupts &raquo;</a></p>
