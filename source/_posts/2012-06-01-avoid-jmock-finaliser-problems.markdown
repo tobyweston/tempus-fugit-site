@@ -14,6 +14,8 @@ The default threading policy for a JMock `Mockery` warns if the mockery is being
 
 If you really need multi-threaded access to the mockery, it's a [straight forward fix](/recipes/2012/06/01/making-jmock-thread-safe) to swap the policy out. As in the log line above though, sometimes the JVM's finaliser thread sticks it's oar in and confuses the `SingleThreadedPolicy`.
 
+<!-- more -->
+
 To get rid of this, you can set a custom threading policy that performs the same check as the default, just not when the finaliser thread is involved.
 
 {% codeblock lang:java %}

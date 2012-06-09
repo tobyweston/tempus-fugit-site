@@ -11,6 +11,7 @@ JMock's `Synchronizer` serialises access to the mock object's "context", it mean
 
 If you're seeing this kind of thing, appart from using the `@Test(timeout=1000)` annotation, you might consider an alternative `ThreadingPolicy` implementation using `Lock`s that can timeout and maintain liveliness.
 
+<!-- more -->
 
 {% codeblock lang:java %}
 
