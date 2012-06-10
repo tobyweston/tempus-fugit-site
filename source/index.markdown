@@ -16,4 +16,8 @@ The tempus-fugit library helps you write and test concurrent code.
 
 ## Ready to Get Started?
 
-Just download from Maven, look through the [documentation](/documentation) or browse the [recipes archive](/recipes/archives) for tips.
+Just download from Maven, look through the [documentation](/documentation) or browse the [recipes archive](/recipes/archives).
+
+## Getting Help
+
+Ask a questions on [Stackoverflow](http://stackoverflow.com/) and mention [@tempusfugitlib](https://twitter.com/#!/tempusfugitlib) on twitter.
