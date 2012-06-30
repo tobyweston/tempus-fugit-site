@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Make JMock Thread Safe - tempus-fugit</title>
+  <title>Handling Interrupt Exceptions - tempus-fugit</title>
   <meta name="author" content="Toby Weston">
 
   
-  <meta name="description" content="Make a JMock Mockery thread safe by using a Synchroniser">
-  <meta name="keywords" content="JMock, Thread safe, Thread-safe, make jmock thread safe, the Mockery is not thread-safe: use a Synchroniser to ensure thread safety">
+  <meta name="description" content="Learn how should you handle InterruptedExceptions">
+  <meta name="keywords" content="Thread.interrupt, Java concurrency, interrupt, InterruptedException, java.lang">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://tempusfugitlibrary.org/recipes/2012/06/01/making-jmock-thread-safe">
+  <link rel="canonical" href="http://tempusfugitlibrary.org/recipes/2012/06/30/handling-interrupt-exceptions">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -83,7 +83,7 @@
   
   <header>
     
-      <h1 class="entry-title">Make JMock Thread Safe</h1>
+      <h1 class="entry-title">Handling Interrupt Exceptions</h1>
     
     
       <p class="meta">
@@ -99,28 +99,62 @@
   
 
 
-<time datetime="2012-06-01T19:00:00+01:00" pubdate data-updated="true">Jun 1<span>st</span>, 2012</time>
+<time datetime="2012-06-30T13:01:00+01:00" pubdate data-updated="true">Jun 30<span>th</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>By default, JMock&#8217;s &#8220;context&#8221; is not thread safe. All bets are off if you access the <code>Mockery</code> from  multiple threads. Happily, since JMock 2.6.0, you can set a threading policy per mockery.</p>
+<div class="entry-content"><p>How should you handle <code>InterruptedException</code>s?</p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Mockery</span> <span class="n">mockery</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JUnit4Mockery</span><span class="o">()</span> <span class="o">{{</span>
-</span><span class='line'>  <span class="n">setThreadingPolicy</span><span class="o">(</span><span class="k">new</span> <span class="n">Synchroniser</span><span class="o">());</span>
-</span><span class='line'><span class="o">}};</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">100</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="c1">// what to do?</span>
+</span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>The <code>Synchroniser</code> forces serialisation of each mocked method call using <code>synchronized</code>. Use it when you&#8217;re running multi-threaded style tests using JMock. The default behaviour will warn you if a mockery is being used like this.</p>
 
-<pre><code>the Mockery is not thread-safe: use a Synchroniser to ensure thread safety
-</code></pre>
+
+<!-- more -->
+
+
+<p>You could rethrow if it&#8217;s appropriate but often its not. If that&#8217;s the case, you should set the <em>interrupt status</em> flag associated with the current thread. For example,</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">100</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">interrupt</span><span class="o">();</span> <span class="c1">// reset the interrupt status</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Typically, if a Java method throws <code>InterruptedException</code>, it will have reset the <em>interrupt status</em> before doing so. In the example above, you&#8217;re just restoring it and preserving a flag to indicate the thread had once been interrupted.</p>
+
+<p>The reason for preserving this status flag is in case code other than your own depends on it. For example, a framework (which you may not appreciate is actually being used), may be doing something like the following to (correctly) support interruption.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="k">while</span> <span class="o">(!</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">isInterrupted</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">process</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You should generally never just catch the exception and ignore it; it may cripple code depending on the status flag for correct behaviour. In the same way, it&#8217;s rarely a good idea to catch and exception and <a href="http://baddotrobot.com/blog/2010/10/18/logging-is-evil-but/">just log it</a>, especially in the case of <code>InterruptedException</code>.</p>
 </div>
 
 
@@ -143,12 +177,12 @@
   
 
 
-<time datetime="2012-06-01T19:00:00+01:00" pubdate data-updated="true">Jun 1<span>st</span>, 2012</time>
+<time datetime="2012-06-30T13:01:00+01:00" pubdate data-updated="true">Jun 30<span>th</span>, 2012</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/recipes/categories/concurrency/'>Concurrency</a>, <a class='category' href='/recipes/categories/mocking/'>Mocking</a>
+    <a class='category' href='/recipes/categories/concurrency/'>Concurrency</a>
   
 </span>
 
@@ -157,7 +191,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://tempusfugitlibrary.org/recipes/2012/06/01/making-jmock-thread-safe/" data-via="" data-counturl="http://tempusfugitlibrary.org/recipes/2012/06/01/making-jmock-thread-safe/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://tempusfugitlibrary.org/recipes/2012/06/30/handling-interrupt-exceptions/" data-via="" data-counturl="http://tempusfugitlibrary.org/recipes/2012/06/30/handling-interrupt-exceptions/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -168,10 +202,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/recipes/2012/05/26/detecting-deadlocks/" title="Previous Post: Detecting Deadlocks">&laquo; Detecting Deadlocks</a>
+        <a class="basic-alignment left" href="/recipes/2012/06/01/avoid-jmock-finaliser-problems/" title="Previous Post: Avoid JMock Finaliser Problems">&laquo; Avoid JMock Finaliser Problems</a>
       
-      
-        <a class="basic-alignment right" href="/recipes/2012/06/01/timeout-jmock-synchroniser/" title="Next Post: Timeout in JMock Synchroniser">Timeout in JMock Synchroniser &raquo;</a>
       
     </p>
   </footer>
@@ -201,8 +233,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://tempusfugitlibrary.org/recipes/2012/06/01/making-jmock-thread-safe/';
-        var disqus_url = 'http://tempusfugitlibrary.org/recipes/2012/06/01/making-jmock-thread-safe/';
+        var disqus_identifier = 'http://tempusfugitlibrary.org/recipes/2012/06/30/handling-interrupt-exceptions/';
+        var disqus_url = 'http://tempusfugitlibrary.org/recipes/2012/06/30/handling-interrupt-exceptions/';
         var disqus_script = 'embed.js';
       
     (function () {

@@ -9,8 +9,8 @@
   <meta name="author" content="Toby Weston">
 
   
-  <meta name="description" content="JMock&#8217;s Synchronizer serialises access to the mock object&#8217;s &#8220;context&#8221;, it means all invocations of mocked methods call will &hellip;">
-  
+  <meta name="description" content="Add timeout behaviour to JMock's Synchroniser, the ThreadingPolicy that makes JMock's context thread safe.">
+  <meta name="keywords" content="JMock, Synchronizer, timeout a jmock synchroniser, thread safe">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -106,9 +106,9 @@
   </header>
 
 
-<div class="entry-content"><p>JMock&#8217;s <code>Synchronizer</code> serialises access to the mock object&#8217;s &#8220;context&#8221;, it means all invocations of mocked methods call will be <code>synchronized</code> on the same monitor, effectively forcing them to run in sequence without thread safety concerns. As it uses <code>synchronized</code> though, you can (with some effort) get into trouble with tests that never finish.</p>
+<div class="entry-content"><p>JMock&#8217;s <code>Synchroniser</code> serialises access to the mock object&#8217;s &#8220;context&#8221;, it means all invocations of mocked methods call will be <code>synchronized</code> on the same monitor, effectively forcing them to run in sequence without thread safety concerns. As it uses <code>synchronized</code> though, you can (with some effort) get into trouble with tests that never finish.</p>
 
-<p>If you&#8217;re seeing this kind of thing, appart from using the <code>@Test(timeout=1000)</code> annotation, you might consider an alternative <code>ThreadingPolicy</code> implementation using <code>Lock</code>s that can timeout and maintain liveliness.</p>
+<p>If you&#8217;re seeing this kind of thing, apart from using the <code>@Test(timeout=1000)</code> annotation, you might consider an alternative <code>ThreadingPolicy</code> implementation using <code>Lock</code>s that can timeout and maintain liveliness.</p>
 
 <!-- more -->
 
@@ -334,7 +334,7 @@
   </div>
   <footer role="contentinfo"><p>
   Copyright &copy; 2009-2012 - Toby Weston -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a>, theme by <a href="https://twitter.com/#!/alemelandri">@alemelandri</a></span> - <a href="/excludeme">exclude from analytics</a>
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a>, theme by <a href="https://twitter.com/#!/alemelandri">@alemelandri</a></span> - <a href="/excludeme">Exclude from analytics</a>
 </p>
 
 </footer>

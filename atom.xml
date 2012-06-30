@@ -4,7 +4,7 @@
   <title><![CDATA[tempus-fugit]]></title>
   <link href="http://tempusfugitlibrary.org/atom.xml" rel="self"/>
   <link href="http://tempusfugitlibrary.org/"/>
-  <updated>2012-06-10T19:08:20+01:00</updated>
+  <updated>2012-06-30T15:00:57+01:00</updated>
   <id>http://tempusfugitlibrary.org/</id>
   <author>
     <name><![CDATA[Toby Weston]]></name>
@@ -12,6 +12,63 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Handling Interrupt Exceptions]]></title>
+    <link href="http://tempusfugitlibrary.org/recipes/2012/06/30/handling-interrupt-exceptions/"/>
+    <updated>2012-06-30T13:01:00+01:00</updated>
+    <id>http://tempusfugitlibrary.org/recipes/2012/06/30/handling-interrupt-exceptions</id>
+    <content type="html"><![CDATA[<p>How should you handle <code>InterruptedException</code>s?</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">100</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="c1">// what to do?</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!-- more -->
+
+
+<p>You could rethrow if it&#8217;s appropriate but often its not. If that&#8217;s the case, you should set the <em>interrupt status</em> flag associated with the current thread. For example,</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">100</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">interrupt</span><span class="o">();</span> <span class="c1">// reset the interrupt status</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Typically, if a Java method throws <code>InterruptedException</code>, it will have reset the <em>interrupt status</em> before doing so. In the example above, you&#8217;re just restoring it and preserving a flag to indicate the thread had once been interrupted.</p>
+
+<p>The reason for preserving this status flag is in case code other than your own depends on it. For example, a framework (which you may not appreciate is actually being used), may be doing something like the following to (correctly) support interruption.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="k">while</span> <span class="o">(!</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">isInterrupted</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">process</span><span class="o">();</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You should generally never just catch the exception and ignore it; it may cripple code depending on the status flag for correct behaviour. In the same way, it&#8217;s rarely a good idea to catch and exception and <a href="http://baddotrobot.com/blog/2010/10/18/logging-is-evil-but/">just log it</a>, especially in the case of <code>InterruptedException</code>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Avoid JMock Finaliser Problems]]></title>
@@ -111,9 +168,9 @@
     <link href="http://tempusfugitlibrary.org/recipes/2012/06/01/timeout-jmock-synchroniser/"/>
     <updated>2012-06-01T21:15:00+01:00</updated>
     <id>http://tempusfugitlibrary.org/recipes/2012/06/01/timeout-jmock-synchroniser</id>
-    <content type="html"><![CDATA[<p>JMock&#8217;s <code>Synchronizer</code> serialises access to the mock object&#8217;s &#8220;context&#8221;, it means all invocations of mocked methods call will be <code>synchronized</code> on the same monitor, effectively forcing them to run in sequence without thread safety concerns. As it uses <code>synchronized</code> though, you can (with some effort) get into trouble with tests that never finish.</p>
+    <content type="html"><![CDATA[<p>JMock&#8217;s <code>Synchroniser</code> serialises access to the mock object&#8217;s &#8220;context&#8221;, it means all invocations of mocked methods call will be <code>synchronized</code> on the same monitor, effectively forcing them to run in sequence without thread safety concerns. As it uses <code>synchronized</code> though, you can (with some effort) get into trouble with tests that never finish.</p>
 
-<p>If you&#8217;re seeing this kind of thing, appart from using the <code>@Test(timeout=1000)</code> annotation, you might consider an alternative <code>ThreadingPolicy</code> implementation using <code>Lock</code>s that can timeout and maintain liveliness.</p>
+<p>If you&#8217;re seeing this kind of thing, apart from using the <code>@Test(timeout=1000)</code> annotation, you might consider an alternative <code>ThreadingPolicy</code> implementation using <code>Lock</code>s that can timeout and maintain liveliness.</p>
 
 <!-- more -->
 

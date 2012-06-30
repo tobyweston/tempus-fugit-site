@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Mocking | tempus-fugit]]></title>
   <link href="http://tempusfugitlibrary.org/recipes/categories/mocking/atom.xml" rel="self"/>
   <link href="http://tempusfugitlibrary.org/"/>
-  <updated>2012-06-10T19:08:20+01:00</updated>
+  <updated>2012-06-30T15:00:57+01:00</updated>
   <id>http://tempusfugitlibrary.org/</id>
   <author>
     <name><![CDATA[Toby Weston]]></name>
@@ -123,9 +123,9 @@
     <link href="http://tempusfugitlibrary.org/recipes/2012/06/01/timeout-jmock-synchroniser/"/>
     <updated>2012-06-01T21:15:00+01:00</updated>
     <id>http://tempusfugitlibrary.org/recipes/2012/06/01/timeout-jmock-synchroniser</id>
-    <content type="html"><![CDATA[<p>JMock's <code>Synchronizer</code> serialises access to the mock object's "context", it means all invocations of mocked methods call will be <code>synchronized</code> on the same monitor, effectively forcing them to run in sequence without thread safety concerns. As it uses <code>synchronized</code> though, you can (with some effort) get into trouble with tests that never finish.</p>
+    <content type="html"><![CDATA[<p>JMock's <code>Synchroniser</code> serialises access to the mock object's "context", it means all invocations of mocked methods call will be <code>synchronized</code> on the same monitor, effectively forcing them to run in sequence without thread safety concerns. As it uses <code>synchronized</code> though, you can (with some effort) get into trouble with tests that never finish.</p>
 
-<p>If you're seeing this kind of thing, appart from using the <code>@Test(timeout=1000)</code> annotation, you might consider an alternative <code>ThreadingPolicy</code> implementation using <code>Lock</code>s that can timeout and maintain liveliness.</p>
+<p>If you're seeing this kind of thing, apart from using the <code>@Test(timeout=1000)</code> annotation, you might consider an alternative <code>ThreadingPolicy</code> implementation using <code>Lock</code>s that can timeout and maintain liveliness.</p>
 
 <!-- more -->
 

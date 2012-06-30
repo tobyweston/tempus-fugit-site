@@ -2,25 +2,29 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://tempusfugitlibrary.org/recipes/2012/05/20/testing-concurrent-code/</loc>
-        <lastmod>2012-06-07T22:39:37+01:00</lastmod>
+        <lastmod>2012-06-30T14:59:54+01:00</lastmod>
     </url>
     <url>
         <loc>http://tempusfugitlibrary.org/recipes/2012/05/26/detecting-deadlocks/</loc>
-        <lastmod>2012-06-01T18:33:48+01:00</lastmod>
+        <lastmod>2012-06-30T14:59:54+01:00</lastmod>
     </url>
     <url>
         <loc>http://tempusfugitlibrary.org/recipes/2012/06/01/making-jmock-thread-safe/</loc>
-        <lastmod>2012-06-01T19:02:35+01:00</lastmod>
+        <lastmod>2012-06-30T14:54:38+01:00</lastmod>
     </url>
     <url>
         <loc>http://tempusfugitlibrary.org/recipes/2012/06/01/timeout-jmock-synchroniser/</loc>
-        <lastmod>2012-06-09T18:13:14+01:00</lastmod>
+        <lastmod>2012-06-30T14:54:38+01:00</lastmod>
     </url>
     <url>
         <loc>
             http://tempusfugitlibrary.org/recipes/2012/06/01/avoid-jmock-finaliser-problems/
         </loc>
-        <lastmod>2012-06-09T18:12:48+01:00</lastmod>
+        <lastmod>2012-06-30T14:55:38+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://tempusfugitlibrary.org/recipes/2012/06/30/handling-interrupt-exceptions/</loc>
+        <lastmod>2012-06-30T14:49:12+01:00</lastmod>
     </url>
     <url>
         <loc>http://tempusfugitlibrary.org/404.html</loc>
@@ -144,7 +148,7 @@
     </url>
     <url>
         <loc>http://tempusfugitlibrary.org/excludeme/</loc>
-        <lastmod>2012-06-09T18:13:14+01:00</lastmod>
+        <lastmod>2012-06-30T14:59:54+01:00</lastmod>
     </url>
     <url>
         <loc>http://tempusfugitlibrary.org/</loc>
@@ -152,10 +156,10 @@
     </url>
     <url>
         <loc>http://tempusfugitlibrary.org/recipes/archives/</loc>
-        <lastmod>2012-06-09T18:13:14+01:00</lastmod>
+        <lastmod>2012-06-30T14:59:54+01:00</lastmod>
     </url>
     <url>
         <loc>http://tempusfugitlibrary.org/recipes/</loc>
-        <lastmod>2012-06-09T18:13:14+01:00</lastmod>
+        <lastmod>2012-06-30T14:59:54+01:00</lastmod>
     </url>
 </urlset>

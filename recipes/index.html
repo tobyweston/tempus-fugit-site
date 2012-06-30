@@ -9,7 +9,14 @@
   <meta name="author" content="Toby Weston">
 
   
-  <meta name="description" content="The default threading policy for a JMock Mockery warns if the mockery is being used by multiple threads. The SingleThreadedPolicy will output the &hellip;">
+  <meta name="description" content="How should you handle InterruptedExceptions? 1
+2
+3
+4
+5
+try { Thread.sleep(100);
+} catch (InterruptedException e) { // what to do?
+} ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -86,6 +93,62 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/recipes/2012/06/30/handling-interrupt-exceptions/">Handling Interrupt Exceptions</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-30T13:01:00+01:00" pubdate data-updated="true">Jun 30<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>How should you handle <code>InterruptedException</code>s?</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">100</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="c1">// what to do?</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/recipes/2012/06/30/handling-interrupt-exceptions/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/recipes/2012/06/01/avoid-jmock-finaliser-problems/">Avoid JMock Finaliser Problems</a></h1>
     
     
@@ -155,9 +218,9 @@
   </header>
 
 
-  <div class="entry-content"><p>JMock&#8217;s <code>Synchronizer</code> serialises access to the mock object&#8217;s &#8220;context&#8221;, it means all invocations of mocked methods call will be <code>synchronized</code> on the same monitor, effectively forcing them to run in sequence without thread safety concerns. As it uses <code>synchronized</code> though, you can (with some effort) get into trouble with tests that never finish.</p>
+  <div class="entry-content"><p>JMock&#8217;s <code>Synchroniser</code> serialises access to the mock object&#8217;s &#8220;context&#8221;, it means all invocations of mocked methods call will be <code>synchronized</code> on the same monitor, effectively forcing them to run in sequence without thread safety concerns. As it uses <code>synchronized</code> though, you can (with some effort) get into trouble with tests that never finish.</p>
 
-<p>If you&#8217;re seeing this kind of thing, appart from using the <code>@Test(timeout=1000)</code> annotation, you might consider an alternative <code>ThreadingPolicy</code> implementation using <code>Lock</code>s that can timeout and maintain liveliness.</p>
+<p>If you&#8217;re seeing this kind of thing, apart from using the <code>@Test(timeout=1000)</code> annotation, you might consider an alternative <code>ThreadingPolicy</code> implementation using <code>Lock</code>s that can timeout and maintain liveliness.</p>
 
 </div>
   
@@ -326,6 +389,10 @@
     <ul id="recent_posts">
         
         <li class="post">
+            <a href="/recipes/2012/06/30/handling-interrupt-exceptions/">Handling Interrupt Exceptions</a>
+        </li>
+        
+        <li class="post">
             <a href="/recipes/2012/06/01/avoid-jmock-finaliser-problems/">Avoid JMock Finaliser Problems</a>
         </li>
         
@@ -354,15 +421,27 @@
     </br>
     <blockquote>
         <p>
-            "We always strain at the limits of our ability to comprehend the artifacts we construct -- that's true for software and for skyscrapers."
+            "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as
+            cleverly as possible, you are, by definition, not smart enough to debug it”
         </p>
         <footer>
-            <strong>James Gosling</strong>
+            <strong>Brian Kernighan</strong>
             <cite>
-                <a href="http://www.softwarequotes.com/showquotes.aspx?id=709&name=James%20Gosling">www.softwarequotes.com</a>
+                <a href="http://www.softwarequotes.com/showquotes.aspx?id=575&name=Brian%20Kernighan">www.softwarequotes.com</a>
             </cite>
         </footer>
     </blockquote>
+    <!--<blockquote>-->
+    <!--<p>-->
+    <!--"We always strain at the limits of our ability to comprehend the artifacts we construct -- that's true for software and for skyscrapers."-->
+    <!--</p>-->
+    <!--<footer>-->
+    <!--<strong>James Gosling</strong>-->
+    <!--<cite>-->
+    <!--<a href="http://www.softwarequotes.com/showquotes.aspx?id=709&name=James%20Gosling">www.softwarequotes.com</a>-->
+    <!--</cite>-->
+    <!--</footer>-->
+    <!--</blockquote>-->
 </section>
 
 
@@ -387,7 +466,7 @@
   </div>
   <footer role="contentinfo"><p>
   Copyright &copy; 2009-2012 - Toby Weston -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a>, theme by <a href="https://twitter.com/#!/alemelandri">@alemelandri</a></span> - <a href="/excludeme">exclude from analytics</a>
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a>, theme by <a href="https://twitter.com/#!/alemelandri">@alemelandri</a></span> - <a href="/excludeme">Exclude from analytics</a>
 </p>
 
 </footer>
