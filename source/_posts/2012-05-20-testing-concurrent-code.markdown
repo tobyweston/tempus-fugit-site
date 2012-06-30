@@ -5,6 +5,8 @@ date: 2012-05-20 20:33
 comments: true
 sidebar : false
 categories: [Testing, Concurrency]
+keywords: "testing, testing concurrent code, threading policy, concurrency policy, concurrency, how to test multiple threads, java"
+description: "How do you test multi-threaded code? Testing concurrency can be difficult but there are some straight forward approaches you can take to make things less complex."
 ---
 
 Testing concurrency can be hard. When you fire up threads from within a test, it's difficult not to introduce concurrency bugs in the test code and be sure you're actually exercising the code with the intended interleaving. There must be a better way...

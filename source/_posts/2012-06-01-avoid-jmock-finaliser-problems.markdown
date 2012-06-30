@@ -5,6 +5,8 @@ date: 2012-06-01 23:22
 categories: [Concurrency, Mocking]
 comments: true
 sidebar : false
+keywords: "JMock, finalizer problem, JMOCK-256, the Mockery is not thread-safe"
+description: "Using the default JMock Syncrhoniser may warm the mockery is not thread-safe from the finalizer thread. Use this workaround to avoid the warnings."
 ---
 
 The default threading policy for a JMock `Mockery` warns if the mockery is being used by multiple threads. The `SingleThreadedPolicy` will output the following.

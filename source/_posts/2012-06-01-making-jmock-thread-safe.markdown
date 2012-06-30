@@ -5,6 +5,8 @@ date: 2012-06-01 19:00
 categories: [Concurrency, Mocking]
 comments: true
 sidebar : false
+keywords: "JMock, Thread safe, Thread-safe, make jmock thread safe, the Mockery is not thread-safe: use a Synchroniser to ensure thread safety"
+description: "Make a JMock Mockery thread safe by using a Synchroniser"
 ---
 
 By default, JMock's "context" is not thread safe. All bets are off if you access the `Mockery` from  multiple threads. Happily, since JMock 2.6.0, you can set a threading policy per mockery.

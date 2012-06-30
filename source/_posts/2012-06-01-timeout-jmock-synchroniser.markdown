@@ -5,11 +5,13 @@ date: 2012-06-01 21:15
 categories: [Concurrency, Mocking]
 comments: true
 sidebar : false
+keywords: "JMock, Synchronizer, timeout a jmock synchroniser, thread safe"
+description: "Add timeout behaviour to JMock's Synchroniser, the ThreadingPolicy that makes JMock's context thread safe."
 ---
 
-JMock's `Synchronizer` serialises access to the mock object's "context", it means all invocations of mocked methods call will be `synchronized` on the same monitor, effectively forcing them to run in sequence without thread safety concerns. As it uses `synchronized` though, you can (with some effort) get into trouble with tests that never finish.
+JMock's `Synchroniser` serialises access to the mock object's "context", it means all invocations of mocked methods call will be `synchronized` on the same monitor, effectively forcing them to run in sequence without thread safety concerns. As it uses `synchronized` though, you can (with some effort) get into trouble with tests that never finish.
 
-If you're seeing this kind of thing, appart from using the `@Test(timeout=1000)` annotation, you might consider an alternative `ThreadingPolicy` implementation using `Lock`s that can timeout and maintain liveliness.
+If you're seeing this kind of thing, apart from using the `@Test(timeout=1000)` annotation, you might consider an alternative `ThreadingPolicy` implementation using `Lock`s that can timeout and maintain liveliness.
 
 <!-- more -->
 

@@ -5,6 +5,8 @@ date: 2012-05-26 15:38
 categories: [Concurrency]
 comments: true
 sidebar : false
+keywords: "detecting deadlocks, find deadlocks, deadlocks, java, detect deadlocks programmatically, intrinsic and Java Lock deadlocks, tempus-fugit"
+description: "Programmatically detect basic deadlocks in your Java code, both Java intrinsic (monitor) and Lock based cyclic problems."
 ---
 
 The `DeadlockDetector` class allows you to programmatically detect basic deadlocks in your Java code. You can output deadlocks using the following code (note that printing a thread dump using the `ThreadDump` class will automatically attempt to find any deadlocks).
