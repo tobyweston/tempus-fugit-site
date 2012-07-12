@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Concurrency | tempus-fugit]]></title>
   <link href="http://tempusfugitlibrary.org/recipes/categories/concurrency/atom.xml" rel="self"/>
   <link href="http://tempusfugitlibrary.org/"/>
-  <updated>2012-07-12T20:03:15+01:00</updated>
+  <updated>2012-07-12T20:06:05+01:00</updated>
   <id>http://tempusfugitlibrary.org/</id>
   <author>
     <name><![CDATA[Toby Weston]]></name>
@@ -12,6 +12,69 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Optimise the Number of Threads]]></title>
+    <link href="http://tempusfugitlibrary.org/recipes/2012/07/12/optimise-the-number-of-threads/"/>
+    <updated>2012-07-12T19:01:00+01:00</updated>
+    <id>http://tempusfugitlibrary.org/recipes/2012/07/12/optimise-the-number-of-threads</id>
+    <content type="html"><![CDATA[<p>Working out the theoretical optimal number of threads you should use for your application is fairly straightforward. You do, however, need to understand your applications runtime characteristics. Is it mostly occupied with CPU intensive work or is it mostly waiting for IO? A <a href="http://www.yourkit.com/">good profiler</a> will help you to understand your applications profile.</p>
+
+<h2>CPU Bound Tasks</h2>
+
+<p>For CPU bound tasks, Goetz (2002, 2006.) recommends</p>
+
+<pre><code>threads = number of CPUs + 1
+</code></pre>
+
+<p>Which is intuitive as if a CPU is being kept busy, we can't do more work than the number of CPUs. Goetz purports that the additional CPU has been shown as an improvement over omitting it (2006.), but others don't agree and suggest the number of CPUs is optimal.</p>
+
+<h2>IO Bound Tasks</h2>
+
+<p>Working out the optimal number for IO bound tasks is less obvious. During an IO bound task, a CPU will be left idle (waiting or blocking). This idle time can be better used in initiating another IO bound request.</p>
+
+<p>Subramaniam (2011, p.31) describes the optimal number of threads in terms of the following formula.</p>
+
+<pre><code>threads = number of cores /  (1 – blocking coefficient)
+</code></pre>
+
+<p><img src="../../../../../images/subramaniam.gif"></p>
+
+<p>And Goetz (2002) describes the optimal number of threads in terms of the following.</p>
+
+<pre><code>threads = number of cores * (1 + wait time / service time)
+</code></pre>
+
+<p><img src="../../../../../images/goetz.gif"></p>
+
+<p>Where we can think of <code>wait time / service</code> time as a measure of how contended the task is.</p>
+
+<h2>Goetz and Subramaniam Agree</h2>
+
+<p>Just out of interest, we can show that both IO bound formulas are equivalent. Starting with Goetz’s formula, we assert that <code>w+s=1</code> and remove the service time (<code>s</code>) giving the following</p>
+
+<p><img src="../../../../../images/goetz-2.gif"></p>
+
+<p>We can continue by multiplying both sides by <code>1-w</code> reducing the right hand side to <code>c</code> before reversing the operation and revealing Subramaniam’s expression.</p>
+
+<p><img src="../../../../../images/goetz-3.gif"></p>
+
+<p><img src="../../../../../images/goetz-4.gif"></p>
+
+<p><img src="../../../../../images/subramaniam.gif"></p>
+
+<p>Thanks to <a href="https://twitter.com/Jazzatola">Jazzatola</a> for mathematical input.</p>
+
+<h2>References</h2>
+
+<ul>
+<li>Goetz, B. 2002. <a href="http://www.ibm.com/developerworks/java/library/j-jtp0730/index.html">Java theory and practice: Thread pools and work queues</a>. IBM DeveloperWorks.</li>
+<li>Goetz, B. Peierls, T. Bloch, J. Bowbeer, J. Holmes, D. and Lea, D. 2006. <a href="http://amzn.to/NrXQPZ">Java Concurrency in Practice</a>. 1st Edition. Addison Wesley.</li>
+<li>Subramaniam, V. 2011. <a href="http://amzn.to/NrXXuI">Programming Concurrency on the JVM</a>. 1st Edition. Pragmatic Bookshelf.</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Handling Interrupt Exceptions]]></title>
@@ -395,248 +458,6 @@
 
 <pre><code>the Mockery is not thread-safe: use a Synchroniser to ensure thread safety
 </code></pre>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Detecting Deadlocks]]></title>
-    <link href="http://tempusfugitlibrary.org/recipes/2012/05/26/detecting-deadlocks/"/>
-    <updated>2012-05-26T15:38:00+01:00</updated>
-    <id>http://tempusfugitlibrary.org/recipes/2012/05/26/detecting-deadlocks</id>
-    <content type="html"><![CDATA[<p>The <code>DeadlockDetector</code> class allows you to programmatically detect basic deadlocks in your Java code. You can output deadlocks using the following code (note that printing a thread dump using the <code>ThreadDump</code> class will automatically attempt to find any deadlocks).</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">DeadlockDetector</span><span class="o">.</span><span class="na">printDeadlocks</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">);</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>The <code>DeadlockDecector</code> class will spot Java monitor cyclic locking problems as well as <code>Lock</code> based cyclic problems. It's implementation is basically the same as that used by <code>jconsole</code> and <code>jstack</code>. The types of deadlock it can detect can be illustrated in the example below.</p>
-
-<!-- more -->
-
-
-<h2>Monitor Deadlock Example</h2>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Test</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">potentialDeadlock</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>  <span class="k">new</span> <span class="nf">Kidnapper</span><span class="o">().</span><span class="na">start</span><span class="o">();</span>
-</span><span class='line'>  <span class="k">new</span> <span class="nf">Negotiator</span><span class="o">().</span><span class="na">start</span><span class="o">();</span>
-</span><span class='line'><span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Kidnapper</span> <span class="kd">extends</span> <span class="n">Thread</span> <span class="o">{</span>
-</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span> <span class="kd">synchronized</span> <span class="o">(</span><span class="n">nibbles</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">synchronized</span> <span class="o">(</span><span class="n">cash</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">take</span><span class="o">(</span><span class="n">cash</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'> <span class="o">}</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
-</span><span class='line'><span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Negotiator</span> <span class="kd">extends</span> <span class="n">Thread</span> <span class="o">{</span>
-</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span> <span class="kd">synchronized</span> <span class="o">(</span><span class="n">cash</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">synchronized</span> <span class="o">(</span><span class="n">nibbles</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">take</span><span class="o">(</span><span class="n">nibbles</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'> <span class="o">}</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>Here, the Kidnapper is unwilling to release poor Nibbles the Cat until he has the Cash but our Negotiator is unwilling to part with the Cash until he has poor Nibbles. The deadlock detector displays this situation as follows.</p>
-
-<pre><code>Deadlock detected
-=================
-
-"Negotiator-Thread-1":
-  waiting to lock Monitor of ...DeadlockDetectorTest$Cat@ce4a8a
-  which is held by "Kidnapper-Thread-0"
-
-"Kidnapper-Thread-0":
-  waiting to lock Monitor of ...DeadlockDetectorTest$Cash@7fc8b2
-  which is held by "Negotiator-Thread-1"
-</code></pre>
-
-<p><a href="https://github.com/tobyweston/tempus-fugit/blob/0036345f047fb26b9ca20690895d458cc0c2e104/src/test/java/com/google/code/tempusfugit/concurrency/DeadlockDetectorTest.java">See this example in full</a></p>
-
-<h2>Lock Based Deadlock Example</h2>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="kd">final</span> <span class="n">Cash</span> <span class="n">cash</span> <span class="o">=</span> <span class="o">...</span> <span class="c1">// Cash extends ReentrantLock</span>
-</span><span class='line'><span class="kd">private</span> <span class="kd">final</span> <span class="n">Cat</span> <span class="o">=</span> <span class="o">...</span> <span class="c1">// Cat extends ReentrantLock&lt;/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nd">@Test</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">potentialDeadlock</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">new</span> <span class="n">Kidnapper</span><span class="o">().</span><span class="na">start</span><span class="o">();</span>
-</span><span class='line'><span class="k">new</span> <span class="nf">Negotiator</span><span class="o">().</span><span class="na">start</span><span class="o">();</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Kidnapper</span> <span class="kd">extends</span> <span class="n">Thread</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kt">void</span> <span class="n">run</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">keep</span><span class="o">(</span><span class="n">nibbles</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">take</span><span class="o">(</span><span class="n">cash</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">release</span><span class="o">(</span><span class="n">nibbles</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Negotiator</span> <span class="kd">extends</span> <span class="n">Thread</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kt">void</span> <span class="n">run</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">keep</span><span class="o">(</span><span class="n">cash</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">take</span><span class="o">(</span><span class="n">nibbles</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">release</span><span class="o">(</span><span class="n">cash</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>Where <code>keep</code>, <code>take</code> and <code>release</code> methods are pedagogically named methods wrapping the <code>Lock.lock</code> and <code>Lock.unlock</code> methods.</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="kt">void</span> <span class="nf">keep</span><span class="o">(</span><span class="n">Lock</span> <span class="n">lock</span><span class="o">)</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">private</span> <span class="kt">void</span> <span class="n">take</span><span class="o">(</span><span class="n">Lock</span> <span class="n">lock</span><span class="o">)</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">private</span> <span class="kt">void</span> <span class="n">release</span><span class="o">(</span><span class="n">Lock</span> <span class="n">lock</span><span class="o">)</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>Same scenario as before, a deadlock ensues which is shown as.</p>
-
-<pre><code>Deadlock detected
-=================
-
-"Negotiator-Thread-3":
-  waiting to lock Monitor of java.util.concurrent.locks.ReentrantLock$NonfairSync@266bade9
-  which is held by "Kidnapper-Thread-2"
-
-"Kidnapper-Thread-2":
-  waiting to lock Monitor of java.util.concurrent.locks.ReentrantLock$NonfairSync@6766afb3
-  which is held by "Negotiator-Thread-3"
-</code></pre>
-
-<p><a href="https://github.com/tobyweston/tempus-fugit/blob/728f90331f7281b2b2a7268ba58cdebbfdff3793/src/test/java/com/google/code/tempusfugit/concurrency/DeadlockDetectorWithLocksTest.java">See this example in full</a></p>
 ]]></content>
   </entry>
   

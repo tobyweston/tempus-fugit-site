@@ -27,6 +27,12 @@
         <lastmod>2012-06-30T14:49:12+01:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://tempusfugitlibrary.org/recipes/2012/07/12/optimise-the-number-of-threads/
+        </loc>
+        <lastmod>2012-07-12T20:05:38+01:00</lastmod>
+    </url>
+    <url>
         <loc>http://tempusfugitlibrary.org/404.html</loc>
         <lastmod>2012-05-26T18:45:53+01:00</lastmod>
     </url>
@@ -148,7 +154,7 @@
     </url>
     <url>
         <loc>http://tempusfugitlibrary.org/excludeme/</loc>
-        <lastmod>2012-06-30T14:59:54+01:00</lastmod>
+        <lastmod>2012-07-12T20:05:38+01:00</lastmod>
     </url>
     <url>
         <loc>http://tempusfugitlibrary.org/</loc>
@@ -156,10 +162,10 @@
     </url>
     <url>
         <loc>http://tempusfugitlibrary.org/recipes/archives/</loc>
-        <lastmod>2012-06-30T14:59:54+01:00</lastmod>
+        <lastmod>2012-07-12T20:05:38+01:00</lastmod>
     </url>
     <url>
         <loc>http://tempusfugitlibrary.org/recipes/</loc>
-        <lastmod>2012-06-30T14:59:54+01:00</lastmod>
+        <lastmod>2012-07-12T20:05:38+01:00</lastmod>
     </url>
 </urlset>
