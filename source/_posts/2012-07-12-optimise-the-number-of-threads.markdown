@@ -5,7 +5,6 @@ date: 2012-07-12 19:01
 comments: true
 categories: [Concurrency, Performance]
 sidebar: false
-published: false
 keywords: "optimal number of threads, cpu bound, io bound, goetz, java, tempus-fugit"
 description: "Understand the theoretical optimal number of threads you need in your app. We look at CPU bound and IO bound application profiles."
 ---
