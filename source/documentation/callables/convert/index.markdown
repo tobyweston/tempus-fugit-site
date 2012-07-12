@@ -19,4 +19,4 @@ As a concrete example, Java's `ScheduledExecutorService` class doesn't allow you
 
 
 
-[Next, Callables: Callable with Exception Generics &raquo;](/documentation/time/)
+[Next, Callables: Callable with Exception Generics &raquo;](/documentation/callables/custom/)
