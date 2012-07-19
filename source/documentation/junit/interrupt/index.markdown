@@ -40,7 +40,7 @@ public void interrupted() throws TimeoutException, InterruptedException {
     waitOrTimeout(threadIsWaiting(thread), millis(500));
     thread.interrupt();
     waitOrTimeout(not(threadIsWaiting(thread)), millis(500));
-    **assertThat(thread.getInterrupters().isEmpty(), is(false));**
+    assertThat(thread.getInterrupters().isEmpty(), is(false));
 }{% endcodeblock %}
 
 

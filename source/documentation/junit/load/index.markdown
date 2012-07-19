@@ -67,8 +67,8 @@ public class RunConcurrentlyTest {
     private static final AtomicInteger counter = new AtomicInteger();
 
     @Test
-    **@Concurrent (count = 5)
-    @Repeating (repetition = 10)**
+    @Concurrent (count = 5)
+    @Repeating (repetition = 10)
     public void runsMultipleTimes() {
         counter.getAndIncrement();
     }

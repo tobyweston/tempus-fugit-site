@@ -13,7 +13,7 @@ The tempus-fugit `Callable` interface extends `java.util.concurrent.Callable` bu
 
 
 {% codeblock lang:java %}
-public <T> T foo(java.util.concurrent.Callable<T> callable) throws **Exception** {
+public <T> T foo(java.util.concurrent.Callable<T> callable) throws Exception {
     return callable.call();
 }
 {% endcodeblock %}
