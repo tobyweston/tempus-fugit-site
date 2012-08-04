@@ -11,6 +11,8 @@ description: "Understand the theoretical optimal number of threads you need in y
 
 Working out the theoretical optimal number of threads you should use for your application is fairly straightforward. You do, however, need to understand your applications runtime characteristics. Is it mostly occupied with CPU intensive work or is it mostly waiting for IO? A [good profiler](http://www.yourkit.com/) will help you to understand your applications profile.
 
+<!-- more -->
+
 ## CPU Bound Tasks
 
 For CPU bound tasks, Goetz (2002, 2006.) recommends
