@@ -146,7 +146,7 @@
 </span><span class='line'>    <span class="n">waitOrTimeout</span><span class="o">(</span><span class="n">threadIsWaiting</span><span class="o">(</span><span class="n">thread</span><span class="o">),</span> <span class="n">millis</span><span class="o">(</span><span class="mi">500</span><span class="o">));</span>
 </span><span class='line'>    <span class="n">thread</span><span class="o">.</span><span class="na">interrupt</span><span class="o">();</span>
 </span><span class='line'>    <span class="n">waitOrTimeout</span><span class="o">(</span><span class="n">not</span><span class="o">(</span><span class="n">threadIsWaiting</span><span class="o">(</span><span class="n">thread</span><span class="o">)),</span> <span class="n">millis</span><span class="o">(</span><span class="mi">500</span><span class="o">));</span>
-</span><span class='line'>    <span class="o">**</span><span class="n">assertThat</span><span class="o">(</span><span class="n">thread</span><span class="o">.</span><span class="na">getInterrupters</span><span class="o">().</span><span class="na">isEmpty</span><span class="o">(),</span> <span class="n">is</span><span class="o">(</span><span class="kc">false</span><span class="o">));**</span>
+</span><span class='line'>    <span class="n">assertThat</span><span class="o">(</span><span class="n">thread</span><span class="o">.</span><span class="na">getInterrupters</span><span class="o">().</span><span class="na">isEmpty</span><span class="o">(),</span> <span class="n">is</span><span class="o">(</span><span class="kc">false</span><span class="o">));</span>
 </span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div>
 

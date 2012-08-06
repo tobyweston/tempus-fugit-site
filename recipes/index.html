@@ -112,61 +112,12 @@
 
   <div class="entry-content"><p>Working out the theoretical optimal number of threads you should use for your application is fairly straightforward. You do, however, need to understand your applications runtime characteristics. Is it mostly occupied with CPU intensive work or is it mostly waiting for IO? A <a href="http://www.yourkit.com/">good profiler</a> will help you to understand your applications profile.</p>
 
-<h2>CPU Bound Tasks</h2>
-
-<p>For CPU bound tasks, Goetz (2002, 2006.) recommends</p>
-
-<pre><code>threads = number of CPUs + 1
-</code></pre>
-
-<p>Which is intuitive as if a CPU is being kept busy, we can&#8217;t do more work than the number of CPUs. Goetz purports that the additional CPU has been shown as an improvement over omitting it (2006.), but others don&#8217;t agree and suggest the number of CPUs is optimal.</p>
-
-<h2>IO Bound Tasks</h2>
-
-<p>Working out the optimal number for IO bound tasks is less obvious. During an IO bound task, a CPU will be left idle (waiting or blocking). This idle time can be better used in initiating another IO bound request.</p>
-
-<p>Subramaniam (2011, p.31) describes the optimal number of threads in terms of the following formula.</p>
-
-<pre><code>threads = number of cores /  (1 – blocking coefficient)
-</code></pre>
-
-<p><img src="../../../../../images/subramaniam.gif"></p>
-
-<p>And Goetz (2002) describes the optimal number of threads in terms of the following.</p>
-
-<pre><code>threads = number of cores * (1 + wait time / service time)
-</code></pre>
-
-<p><img src="../../../../../images/goetz.gif"></p>
-
-<p>Where we can think of <code>wait time / service</code> time as a measure of how contended the task is.</p>
-
-<h2>Goetz and Subramaniam Agree</h2>
-
-<p>Just out of interest, we can show that both IO bound formulas are equivalent. Starting with Goetz’s formula, we assert that <code>w+s=1</code> and remove the service time (<code>s</code>) giving the following</p>
-
-<p><img src="../../../../../images/goetz-2.gif"></p>
-
-<p>We can continue by multiplying both sides by <code>1-w</code> reducing the right hand side to <code>c</code> before reversing the operation and revealing Subramaniam’s expression.</p>
-
-<p><img src="../../../../../images/goetz-3.gif"></p>
-
-<p><img src="../../../../../images/goetz-4.gif"></p>
-
-<p><img src="../../../../../images/subramaniam.gif"></p>
-
-<p>Thanks to <a href="https://twitter.com/Jazzatola">Jazzatola</a> for mathematical input.</p>
-
-<h2>References</h2>
-
-<ul>
-<li>Goetz, B. 2002. <a href="http://www.ibm.com/developerworks/java/library/j-jtp0730/index.html">Java theory and practice: Thread pools and work queues</a>. IBM DeveloperWorks.</li>
-<li>Goetz, B. Peierls, T. Bloch, J. Bowbeer, J. Holmes, D. and Lea, D. 2006. <a href="http://amzn.to/NrXQPZ">Java Concurrency in Practice</a>. 1st Edition. Addison Wesley.</li>
-<li>Subramaniam, V. 2011. <a href="http://amzn.to/NrXXuI">Programming Concurrency on the JVM</a>. 1st Edition. Pragmatic Bookshelf.</li>
-</ul>
-
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/recipes/2012/07/12/optimise-the-number-of-threads/">Read on &rarr;</a>
+    </footer>
   
 
 

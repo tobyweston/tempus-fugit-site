@@ -195,8 +195,8 @@
 </span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">AtomicInteger</span> <span class="n">counter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicInteger</span><span class="o">();</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="nd">@Test</span>
-</span><span class='line'>    <span class="o">**</span><span class="nd">@Concurrent</span> <span class="o">(</span><span class="n">count</span> <span class="o">=</span> <span class="mi">5</span><span class="o">)</span>
-</span><span class='line'>    <span class="nd">@Repeating</span> <span class="o">(</span><span class="n">repetition</span> <span class="o">=</span> <span class="mi">10</span><span class="o">)**</span>
+</span><span class='line'>    <span class="nd">@Concurrent</span> <span class="o">(</span><span class="n">count</span> <span class="o">=</span> <span class="mi">5</span><span class="o">)</span>
+</span><span class='line'>    <span class="nd">@Repeating</span> <span class="o">(</span><span class="n">repetition</span> <span class="o">=</span> <span class="mi">10</span><span class="o">)</span>
 </span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">runsMultipleTimes</span><span class="o">()</span> <span class="o">{</span>
 </span><span class='line'>        <span class="n">counter</span><span class="o">.</span><span class="na">getAndIncrement</span><span class="o">();</span>
 </span><span class='line'>    <span class="o">}</span>

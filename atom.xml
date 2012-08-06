@@ -4,7 +4,7 @@
   <title><![CDATA[tempus-fugit]]></title>
   <link href="http://tempusfugitlibrary.org/atom.xml" rel="self"/>
   <link href="http://tempusfugitlibrary.org/"/>
-  <updated>2012-07-12T20:06:05+01:00</updated>
+  <updated>2012-08-06T19:53:08+01:00</updated>
   <id>http://tempusfugitlibrary.org/</id>
   <author>
     <name><![CDATA[Toby Weston]]></name>
@@ -19,6 +19,9 @@
     <updated>2012-07-12T19:01:00+01:00</updated>
     <id>http://tempusfugitlibrary.org/recipes/2012/07/12/optimise-the-number-of-threads</id>
     <content type="html"><![CDATA[<p>Working out the theoretical optimal number of threads you should use for your application is fairly straightforward. You do, however, need to understand your applications runtime characteristics. Is it mostly occupied with CPU intensive work or is it mostly waiting for IO? A <a href="http://www.yourkit.com/">good profiler</a> will help you to understand your applications profile.</p>
+
+<!-- more -->
+
 
 <h2>CPU Bound Tasks</h2>
 
