@@ -114,7 +114,7 @@
 </pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;dependency&gt;</span>
 </span><span class='line'>  <span class="nt">&lt;groupId&gt;</span>com.google.code.tempus-fugit<span class="nt">&lt;/groupId&gt;</span>
 </span><span class='line'>  <span class="nt">&lt;artifactId&gt;</span>tempus-fugit<span class="nt">&lt;/artifactId&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;version&gt;</span>1.1-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;version&gt;</span>1.1<span class="nt">&lt;/version&gt;</span>
 </span><span class='line'><span class="nt">&lt;/dependency&gt;</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div>
 
@@ -128,6 +128,39 @@
 </span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
+<h2>Snapshots</h2>
+
+<p>Snapshots are deployed to <a href="https://oss.sonatype.org/content/repositories/snapshots/com/google/code/tempus-fugit/tempus-fugit">OSS Sonatype</a>. They're not picked up by Maven central so if you want to use a snapshot release in your projects, you'll need to add the Sonatype snapshot repository to your list of repositories.</p>
+
+<p>You can do this in your <code>settings.xml</code> or <code>pom.xml</code> by adding something like this.</p>
+
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;repositories&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;repository&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;id&gt;</span>sonatype-nexus-snapshots<span class="nt">&lt;/id&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;name&gt;</span>Sonatype Nexus Snapshots<span class="nt">&lt;/name&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;url&gt;</span>https://oss.sonatype.org/content/repositories/snapshots<span class="nt">&lt;/url&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;releases&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;enabled&gt;</span>false<span class="nt">&lt;/enabled&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/releases&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;snapshots&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;enabled&gt;</span>true<span class="nt">&lt;/enabled&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/snapshots&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/repository&gt;</span>
+</span><span class='line'><span class="nt">&lt;/repositories&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
   
