@@ -21,3 +21,7 @@ Just download from Maven, look through the [documentation](/documentation) or br
 ## Getting Help
 
 Ask a questions on [Stackoverflow](http://stackoverflow.com/) and mention [@tempusfugitlib](https://twitter.com/#!/tempusfugitlib) on twitter.
+
+## Latest version
+
+The latest version is **1.2-SNAPSHOT**. It's not available via Maven central (as it doesn't publish snapshot versions). [Get it here](https://oss.sonatype.org/content/repositories/snapshots/com/google/code/tempus-fugit/tempus-fugit/1.2-SNAPSHOT/).
