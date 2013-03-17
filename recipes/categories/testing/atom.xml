@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Testing | tempus-fugit]]></title>
   <link href="http://tempusfugitlibrary.org/recipes/categories/testing/atom.xml" rel="self"/>
   <link href="http://tempusfugitlibrary.org/"/>
-  <updated>2013-03-16T13:46:20+00:00</updated>
+  <updated>2013-03-17T15:39:32+00:00</updated>
   <id>http://tempusfugitlibrary.org/</id>
   <author>
     <name><![CDATA[Toby Weston]]></name>
@@ -12,6 +12,115 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Wait for UI Elements in Tests]]></title>
+    <link href="http://tempusfugitlibrary.org/recipes/2013/03/17/wait-for-ui-element/"/>
+    <updated>2013-03-17T14:56:00+00:00</updated>
+    <id>http://tempusfugitlibrary.org/recipes/2013/03/17/wait-for-ui-element</id>
+    <content type="html"><![CDATA[<p>When a UI asynchronously updates a value, it can be difficult to make assertions in tests reliably. There are typically two approaches to solving this, either poll the UI until the value matches the assertion (timing out after a certain amount of time) or make the UI notify your test code that a value has changed.</p>
+
+<p>Using the <code>WaitFor</code> class along with <a href="http://docs.seleniumhq.org/docs/03_webdriver.jsp#">Web Driver</a> allows you to do the former with something like this.</p>
+
+<!-- more -->
+
+
+<h2>Wait for a Condition</h2>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">WaitFor</span><span class="o">.</span><span class="na">waitOrTimeout</span><span class="o">(</span><span class="k">new</span> <span class="n">Condition</span><span class="o">()</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="nd">@Override</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isSatisfied</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">ui</span><span class="o">.</span><span class="na">findElement</span><span class="o">(</span><span class="n">By</span><span class="o">.</span><span class="na">id</span><span class="o">(</span><span class="s">&quot;result&quot;</span><span class="o">)).</span><span class="na">getText</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;100 matches&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;},</span> <span class="n">timeout</span><span class="o">(</span><span class="n">millis</span><span class="o">(</span><span class="mi">250</span><span class="o">)))</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>This creates an implicit assertion. If the <code>Condition</code> returns <code>true</code> after any number of attempts, the test code continues without incident. If, however, it doesn't find the value within the timeout, a <code>TimeoutException</code> will be thrown failing your test.</p>
+
+<h2>Wait for an Assertion</h2>
+
+<p>In <a href="https://oss.sonatype.org/content/repositories/snapshots/com/google/code/tempus-fugit/tempus-fugit/1.2-SNAPSHOT/">tempus-fugit 1.2</a>, there's a new method on <code>WaitFor</code> to convert the <code>TimeoutException</code> above into a JUnit failure.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">waitFor</span><span class="o">(</span><span class="n">SelfDescribingCondition</span> <span class="n">condition</span><span class="o">,</span> <span class="n">Timeout</span> <span class="n">timeout</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">waitOrTimeout</span><span class="o">(</span><span class="n">condition</span><span class="o">,</span> <span class="n">failOnTimeout</span><span class="o">(</span><span class="n">condition</span><span class="o">),</span> <span class="n">timeout</span><span class="o">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Combine it with <code>Conditions.assertion</code> to periodically query the UI and compare it against a Hamcrest <code>Matcher</code>. For example,</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">waitFor</span><span class="o">(</span><span class="n">assertion</span><span class="o">(</span><span class="n">getResultFrom</span><span class="o">(</span><span class="n">ui</span><span class="o">),</span> <span class="n">is</span><span class="o">(</span><span class="s">&quot;100 matches&quot;</span><span class="o">)),</span> <span class="n">timeout</span><span class="o">(</span><span class="n">millis</span><span class="o">(</span><span class="mi">250</span><span class="o">)));</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>where, <code>getResultFrom(ui)</code> returns an instance of <code>ProbeFor&lt;T&gt;</code> (a self describing <code>Callable</code> used to query the UI for a <code>T</code>).</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="n">ProbeFor</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">getResultFrom</span><span class="o">(</span><span class="kd">final</span> <span class="n">UI</span> <span class="n">ui</span><span class="o">)</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">return</span> <span class="k">new</span> <span class="n">ProbeFor</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">String</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">call</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">RuntimeException</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">ui</span><span class="o">.</span><span class="na">findElement</span><span class="o">(</span><span class="n">By</span><span class="o">.</span><span class="na">id</span><span class="o">(</span><span class="s">&quot;result&quot;</span><span class="o">)).</span><span class="na">getText</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">describeTo</span><span class="o">(</span><span class="n">Description</span> <span class="n">description</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">description</span><span class="o">.</span><span class="na">appendText</span><span class="o">(</span><span class="s">&quot;&#39;number of results&#39; field in the UI&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">};</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>Turn Timeouts into AssertionErrors</h2>
+
+<p>Now rather than fail with a <code>TimeoutException</code>, if the assertion hasn't matched before the timeout expires, a regular JUnit failure (<code>AssertionError</code>) will be thrown. In the IDE, it'll look something like this.</p>
+
+<pre><code>java.lang.AssertionError: 'number of results' field in the UI
+Expected: is "100 matches"
+     but: &lt;was ""&gt;, &lt;was ""&gt;, &lt;was ""&gt;, &lt;was ""&gt;, &lt;was "200 matches"&gt;
+</code></pre>
+
+<p>The <code>describeTo</code> method describes the probe and the <code>Matcher</code> describes what was expected. Because the UI was polled several times, each value was displayed in the 'but was' section. On the fifth attempt, a value was found but it didn't match the expectation.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Testing Concurrent Code]]></title>

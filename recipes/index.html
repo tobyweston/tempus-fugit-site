@@ -9,7 +9,7 @@
   <meta name="author" content="Toby Weston">
 
   
-  <meta name="description" content="Working out the theoretical optimal number of threads you should use for your application is fairly straightforward. You do, however, need to &hellip;">
+  <meta name="description" content="When a UI asynchronously updates a value, it can be difficult to make assertions in tests reliably. There are typically two approaches to solving &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +81,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/recipes/2013/03/17/wait-for-ui-element/">Wait for UI Elements in Tests</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-17T14:56:00+00:00" pubdate data-updated="true">Mar 17<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When a UI asynchronously updates a value, it can be difficult to make assertions in tests reliably. There are typically two approaches to solving this, either poll the UI until the value matches the assertion (timing out after a certain amount of time) or make the UI notify your test code that a value has changed.</p>
+
+<p>Using the <code>WaitFor</code> class along with <a href="http://docs.seleniumhq.org/docs/03_webdriver.jsp#">Web Driver</a> allows you to do the former with something like this.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/recipes/2013/03/17/wait-for-ui-element/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -422,6 +465,10 @@
     <section>
     <h1>Recent Recipes</h1>
     <ul id="recent_posts">
+        
+        <li class="post">
+            <a href="/recipes/2013/03/17/wait-for-ui-element/">Wait for UI Elements in Tests</a>
+        </li>
         
         <li class="post">
             <a href="/recipes/2012/07/12/optimise-the-number-of-threads/">Optimise the Number of Threads</a>
