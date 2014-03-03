@@ -10,8 +10,8 @@ categories: [Concurrency Utilities]
 ## Concurrency Utilities
 
 * [Countdown Latch with Timeout](/documentation/concurrency/latch)
-* [Always Execute Using Locks](/documentation/concurrency/latch)
-* [Timeoutable Completion Service](/documentation/concurrency/latch)
+* [Always Execute Using Locks](/documentation/concurrency/locks)
+* [Timeoutable Completion Service](/documentation/concurrency/completion)
 
 
 
